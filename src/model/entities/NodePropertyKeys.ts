@@ -9,12 +9,16 @@ import {
 } from 'typeorm';
 import { Node } from './Nodes';
 import { NodePropertyValue } from './NodePropertyValues';
+import { nanoid } from 'nanoid';
 
 @Index('node_property_keys_pkey', ['id'], { unique: true })
 @Entity('node_property_keys', { schema: 'admin' })
 export class NodePropertyKey {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'node_property_key_id' })
   id!: string;
+
+  @Column({ length: 21, unique: true, default: () => nanoid() })
+  uuid!: string;
 
   @Column('character varying', {
     name: 'property_key',

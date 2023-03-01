@@ -10,12 +10,16 @@ import {
 import { RelationshipPropertyKey } from './RelationshipPropertyKeys';
 import { Node } from './Nodes';
 import { RelationshipType, RelationshipTypeName } from './RelationshipTypes';
+import { nanoid } from 'nanoid';
 
 @Index('relationships_pkey', ['id'], { unique: true })
 @Entity('relationships', { schema: 'admin' })
 export class Relationship {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'relationship_id' })
   id!: string;
+
+  @Column({ length: 21, unique: true, default: () => nanoid() })
+  uuid!: string;
 
   @OneToMany(
     () => RelationshipPropertyKey,

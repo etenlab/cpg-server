@@ -8,12 +8,16 @@ import {
 import { NodePropertyKey } from './NodePropertyKeys';
 import { NodeTypeName } from './NodeTypes';
 import { Relationship } from './Relationships';
+import { nanoid } from 'nanoid';
 
 @Index('nodes_pkey', ['id'], { unique: true })
 @Entity('nodes', { schema: 'admin' })
 export class Node {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'node_id' })
   id!: string;
+
+  @Column({ length: 21, unique: true, default: () => nanoid() })
+  uuid!: string;
 
   @OneToMany(() => NodePropertyKey, (nodePropertyKeys) => nodePropertyKeys.node)
   propertyKeys!: NodePropertyKey[];

@@ -4,6 +4,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SyncService } from './sync/sync.service';
+import { SyncController } from './sync/sync.controller';
+import { MigrationService } from './migration/migration.service';
 import entities from './model/entities';
 
 @Module({
@@ -27,8 +30,8 @@ import entities from './model/entities';
     TypeOrmModule.forFeature(entities),
     HttpModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, SyncController],
+  providers: [AppService, SyncService, MigrationService],
   // entities: [ProgressBibleLanguageDetail],
   exports: [],
 })

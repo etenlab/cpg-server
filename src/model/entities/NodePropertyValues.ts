@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import {
   Column,
   Entity,
@@ -13,6 +14,9 @@ import { NodePropertyKey } from './NodePropertyKeys';
 export class NodePropertyValue {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'node_property_value_id' })
   id!: string;
+
+  @Column({ length: 21, unique: true, default: () => nanoid() })
+  uuid!: string;
 
   @Column('jsonb', { name: 'property_value', nullable: true })
   value!: { value: any } | null;

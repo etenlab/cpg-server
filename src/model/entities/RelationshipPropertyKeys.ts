@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Relationship } from './Relationships';
 import { RelationshipPropertyValue } from './RelationshipPropertyValues';
+import { nanoid } from 'nanoid';
 
 @Index('relationship_property_keys_pkey', ['id'], {
   unique: true,
@@ -20,6 +21,9 @@ export class RelationshipPropertyKey {
     name: 'relationship_property_key_id',
   })
   id!: string;
+
+  @Column({ length: 21, unique: true, default: () => nanoid() })
+  uuid!: string;
 
   @Column('character varying', {
     name: 'property_key',

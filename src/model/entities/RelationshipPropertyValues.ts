@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import {
   Column,
   Entity,
@@ -18,6 +19,9 @@ export class RelationshipPropertyValue {
     name: 'relationship_property_value_id',
   })
   id!: string;
+
+  @Column({ length: 21, unique: true, default: () => nanoid() })
+  uuid!: string;
 
   @Column('jsonb', { name: 'property_value', nullable: true })
   value!: { [key: string]: any } | null;
