@@ -1,12 +1,25 @@
 import { Column, Entity, Index } from 'typeorm';
 
 @Index('node_types_pkey', ['name'], { unique: true })
-@Entity('node_types', { schema: 'admin' })
+@Entity('node_type', { schema: 'public' })
 export class NodeType {
-  @Column('character varying', { primary: true, name: 'type_name', length: 32 })
+  constructor() {
+    this.updatedAt = this.updatedAt || new Date();
+  }
+
+  @Column('character varying', {
+    primary: true,
+    name: 'type_name',
+    length: 32,
+    unique: true,
+  })
   name!: NodeTypeName;
 
-  @Column('datetime', { nullable: false, name: 'updated_at' })
+  @Column('timestamp', {
+    nullable: false,
+    name: 'updated_at',
+    default: () => new Date(),
+  })
   updatedAt: Date;
 }
 

@@ -1,19 +1,19 @@
 CREATE TABLE IF NOT EXISTS node_type (
     type_name varchar(32) PRIMARY KEY,
-    updated_at datetime NOT NULL
+    updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS node (
     id varchar(21) PRIMARY KEY,
     node_type varchar(32) REFERENCES node_type(type_name),
-    updated_at datetime NOT NULL
+    updated_at timestamp NULL
 );
 
 CREATE TABLE IF NOT EXISTS node_property_key (
     id varchar(21) PRIMARY KEY,
     node_id varchar(21) REFERENCES node(id) NOT NULL,
     property_key varchar(64),
-    updated_at datetime NOT NULL
+    updated_at timestamp NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_node_property_key_node_id_key ON node_property_key (id);
@@ -22,14 +22,14 @@ CREATE TABLE IF NOT EXISTS node_property_value (
     id varchar(21) PRIMARY KEY,
     node_property_key_id varchar(21) REFERENCES node_property_key(id) NOT NULL,
     property_value jsonb,
-    updated_at datetime NOT NULL
+    updated_at timestamp NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_node_property_value_key_id ON node_property_value (id);
 
 CREATE TABLE IF NOT EXISTS relationship_type (
     type_name varchar(32) PRIMARY KEY,
-    updated_at datetime NOT NULL
+    updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS relationship (
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS relationship (
     relationship_type varchar(32) REFERENCES relationship_type(type_name),
     from_node_id varchar(21) REFERENCES node(id),
     to_node_id varchar(21) REFERENCES node(id),
-    updated_at datetime NOT NULL
+    updated_at timestamp NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_relationship_from_node_id ON relationship (id);
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS relationship_property_key (
     id varchar(21) PRIMARY KEY,
     relationship_id varchar(21) REFERENCES relationship(id) NOT NULL,
     property_key varchar(64),
-    updated_at datetime NOT NULL
+    updated_at timestamp NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_relationship_property_key_relationship_id ON relationship_property_key (id);
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS relationship_property_value (
     id varchar(21) PRIMARY KEY,
     relationship_property_key_id varchar(21) REFERENCES relationship_property_key(id) NOT NULL,
     property_value jsonb,
-    updated_at datetime NOT NULL
+    updated_at timestamp NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_relationship_property_value_key_id ON relationship_property_value (id);

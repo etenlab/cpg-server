@@ -1,16 +1,29 @@
 import { Column, Entity, Index, OneToMany } from 'typeorm';
-import { Relationship } from './Relationships';
+import { Relationship } from './Relationship';
 
 @Index('relationship_types_pkey', ['name'], { unique: true })
-@Entity('relationship_types', { schema: 'admin' })
+@Entity('relationship_type', { schema: 'public' })
 export class RelationshipType {
-  @Column('character varying', { primary: true, name: 'type_name', length: 32 })
+  constructor() {
+    this.updatedAt = this.updatedAt || new Date();
+  }
+
+  @Column('character varying', {
+    primary: true,
+    unique: true,
+    name: 'type_name',
+    length: 32,
+  })
   name!: RelationshipTypeName;
 
   @OneToMany(() => Relationship, (relationships) => relationships.type)
   relationships!: Relationship[];
 
-  @Column('datetime', { nullable: false, name: 'updated_at' })
+  @Column('timestamp', {
+    nullable: false,
+    name: 'updated_at',
+    default: () => new Date(),
+  })
   updatedAt: Date;
 }
 

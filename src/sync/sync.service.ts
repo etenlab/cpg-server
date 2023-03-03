@@ -15,14 +15,14 @@ type SyncTableConfig = {
   }[];
 };
 
-function textToJson(value) {
+function textToJson(value: string | null) {
   if (value === null) {
     return null;
   }
   return JSON.parse(value);
 }
 
-function jsonToText(value) {
+function jsonToText(value: string | null) {
   if (value === null) {
     return null;
   }
@@ -157,7 +157,7 @@ export type TableSyncSchema = {
   pkField: string;
 };
 
-export type SyncIncomingEntry = {
+export type SyncPayloadEntry = {
   table: string;
   rows: {
     [key: string]: any;
@@ -171,7 +171,7 @@ export class SyncService {
     private readonly em: EntityManager,
   ) {}
 
-  async syncFromClient(entries: SyncIncomingEntry[]) {
+  async syncFromClient(entries: SyncPayloadEntry[]) {
     const sortedEntries = entries.sort((a, b) => {
       const aIndex = tableConfig.findIndex(
         (cfg) => cfg.remoteTableName === a.table,
@@ -218,24 +218,79 @@ export class SyncService {
                 `Cannot find column for key ${key} in table ${entry.table}`,
               );
             }
+
+            acc['updated_at'] = new Date();
+
             return acc;
-          }, {});
+          }, {} as any);
 
           localRows.push(localRow);
         }
 
         const columnsOrder = Object.keys(localRows[0]);
 
-        await em
+        const tablePlaceholder = 'TABLENAME_PLACEHOLDER_123123123123123123123';
+
+        const sql = em
           .createQueryBuilder()
           .insert()
-          .into(localTableName, columnsOrder)
+          .into(tablePlaceholder, columnsOrder)
           .values(localRows)
           .orUpdate(columnsOrder, [localPK], {
             upsertType: 'on-conflict-do-update',
-          })
-          .execute();
+          });
+
+        const [query, params] = sql.getQueryAndParameters();
+
+        await em.query(query.replace(tablePlaceholder, localTableName), params);
       });
     }
+  }
+
+  async syncToClient(lastSyncDate: Date | null): Promise<SyncPayloadEntry[]> {
+    const result = [] as SyncPayloadEntry[];
+
+    for (const config of tableConfig) {
+      const { localTableName, columns, remoteTableName } = config;
+
+      let rows: any[] = [];
+
+      if (lastSyncDate) {
+        rows = await this.em.query(
+          `SELECT * FROM ${localTableName} WHERE updated_at > $1`,
+          [lastSyncDate],
+        );
+      } else {
+        rows = await this.em.query(`SELECT * FROM ${localTableName}`);
+      }
+
+      const remoteRows = rows.map((row: any) => {
+        return Object.entries(row).reduce((acc, [key, value]) => {
+          const column = columns.find((column) => column.local === key);
+          if (!column) {
+            return acc;
+          }
+
+          if (column.convertToRemote) {
+            acc[column.remote || column.local] = column.convertToRemote(value);
+          } else {
+            acc[column.remote || column.local] = value;
+          }
+
+          return acc;
+        }, {} as any);
+      });
+
+      if (!remoteRows.length) {
+        continue;
+      }
+
+      result.push({
+        table: remoteTableName,
+        rows: remoteRows,
+      });
+    }
+
+    return result;
   }
 }

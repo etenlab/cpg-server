@@ -5,21 +5,22 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { RelationshipPropertyKey } from './RelationshipPropertyKeys';
-import { Node } from './Nodes';
-import { RelationshipType, RelationshipTypeName } from './RelationshipTypes';
+import { RelationshipPropertyKey } from './RelationshipPropertyKey';
+import { Node } from './Node';
+import { RelationshipType, RelationshipTypeName } from './RelationshipType';
 import { nanoid } from 'nanoid';
 
 @Index('relationships_pkey', ['id'], { unique: true })
-@Entity('relationships', { schema: 'admin' })
+@Entity('relationship', { schema: 'public' })
 export class Relationship {
-  @PrimaryGeneratedColumn({ type: 'bigint', name: 'relationship_id' })
-  id!: string;
+  constructor() {
+    this.id = this.id || nanoid();
+    this.updatedAt = this.updatedAt || new Date();
+  }
 
-  @Column({ length: 21, unique: true, default: () => nanoid() })
-  uuid!: string;
+  @Column({ length: 21, primary: true, unique: true, default: () => nanoid() })
+  id!: string;
 
   @OneToMany(
     () => RelationshipPropertyKey,
@@ -45,6 +46,10 @@ export class Relationship {
   @JoinColumn([{ name: 'to_node_id', referencedColumnName: 'id' }])
   toNode!: Node;
 
-  @Column('datetime', { nullable: false, name: 'updated_at' })
+  @Column('timestamp', {
+    nullable: false,
+    name: 'updated_at',
+    default: () => new Date(),
+  })
   updatedAt: Date;
 }
