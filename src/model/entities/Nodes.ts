@@ -34,4 +34,7 @@ export class Node {
 
   @OneToMany(() => Relationship, (relationships) => relationships.toNode)
   incomingRelationships!: Relationship[];
+
+  @Column('datetime', { nullable: false, name: 'updated_at' })
+  updatedAt: Date;
 }

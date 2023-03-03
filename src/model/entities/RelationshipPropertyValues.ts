@@ -37,4 +37,7 @@ export class RelationshipPropertyValue {
     },
   ])
   relationshipPropertyKey!: RelationshipPropertyKey;
+
+  @Column('datetime', { nullable: false, name: 'updated_at' })
+  updatedAt: Date;
 }

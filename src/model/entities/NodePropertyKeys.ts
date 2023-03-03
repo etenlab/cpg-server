@@ -36,4 +36,7 @@ export class NodePropertyKey {
     (nodePropertyValues) => nodePropertyValues.nodePropertyKey,
   )
   values!: NodePropertyValue[];
+
+  @Column('datetime', { nullable: false, name: 'updated_at' })
+  updatedAt: Date;
 }

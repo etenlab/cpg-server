@@ -9,6 +9,9 @@ export class RelationshipType {
 
   @OneToMany(() => Relationship, (relationships) => relationships.type)
   relationships!: Relationship[];
+
+  @Column('datetime', { nullable: false, name: 'updated_at' })
+  updatedAt: Date;
 }
 
 export enum RelationshipTypeName {

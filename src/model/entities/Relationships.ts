@@ -44,4 +44,7 @@ export class Relationship {
   @ManyToOne(() => Node, (nodes) => nodes.incomingRelationships)
   @JoinColumn([{ name: 'to_node_id', referencedColumnName: 'id' }])
   toNode!: Node;
+
+  @Column('datetime', { nullable: false, name: 'updated_at' })
+  updatedAt: Date;
 }

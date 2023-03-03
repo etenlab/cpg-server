@@ -27,4 +27,7 @@ export class NodePropertyValue {
   )
   @JoinColumn([{ name: 'node_property_key_id', referencedColumnName: 'id' }])
   nodePropertyKey!: NodePropertyKey;
+
+  @Column('datetime', { nullable: false, name: 'updated_at' })
+  updatedAt: Date;
 }
