@@ -24,6 +24,7 @@ import entities from './model/entities';
         schema: configService.get('DB_SCHEMA') || 'public',
         entities,
         synchronize: false,
+        logging: true,
       }),
       inject: [ConfigService],
     }),
