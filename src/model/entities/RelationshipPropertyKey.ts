@@ -5,25 +5,23 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Relationship } from './Relationships';
-import { RelationshipPropertyValue } from './RelationshipPropertyValues';
+import { Relationship } from './Relationship';
+import { RelationshipPropertyValue } from './RelationshipPropertyValue';
 import { nanoid } from 'nanoid';
 
 @Index('relationship_property_keys_pkey', ['id'], {
   unique: true,
 })
-@Entity('relationship_property_keys', { schema: 'admin' })
+@Entity('relationship_property_key', { schema: 'public' })
 export class RelationshipPropertyKey {
-  @PrimaryGeneratedColumn({
-    type: 'bigint',
-    name: 'relationship_property_key_id',
-  })
-  id!: string;
+  constructor() {
+    this.id = this.id || nanoid();
+    this.updatedAt = this.updatedAt || new Date();
+  }
 
-  @Column({ length: 21, unique: true, default: () => nanoid() })
-  uuid!: string;
+  @Column({ length: 21, primary: true, unique: true, default: () => nanoid() })
+  id!: string;
 
   @Column('character varying', {
     name: 'property_key',
@@ -45,4 +43,11 @@ export class RelationshipPropertyKey {
       relationshipPropertyValues.relationshipPropertyKey,
   )
   values!: RelationshipPropertyValue[];
+
+  @Column('timestamp', {
+    nullable: false,
+    name: 'updated_at',
+    default: () => new Date(),
+  })
+  updatedAt: Date;
 }

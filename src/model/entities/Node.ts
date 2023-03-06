@@ -1,23 +1,26 @@
-import {
-  Column,
-  Entity,
-  Index,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { NodePropertyKey } from './NodePropertyKeys';
-import { NodeTypeName } from './NodeTypes';
-import { Relationship } from './Relationships';
+import { Column, Entity, Index, OneToMany } from 'typeorm';
+import { NodePropertyKey } from './NodePropertyKey';
+import { NodeTypeName } from './NodeType';
+import { Relationship } from './Relationship';
 import { nanoid } from 'nanoid';
 
 @Index('nodes_pkey', ['id'], { unique: true })
-@Entity('nodes', { schema: 'admin' })
+@Entity('node', { schema: 'public' })
 export class Node {
-  @PrimaryGeneratedColumn({ type: 'bigint', name: 'node_id' })
-  id!: string;
+  constructor() {
+    this.id = this.id || nanoid();
+    this.updatedAt = this.updatedAt || new Date();
+  }
 
-  @Column({ length: 21, unique: true, default: () => nanoid() })
-  uuid!: string;
+  @Column({
+    length: 21,
+    primary: true,
+    unique: true,
+    nullable: false,
+    // This won't work:
+    // default: () => nanoid(),
+  })
+  id!: string;
 
   @OneToMany(() => NodePropertyKey, (nodePropertyKeys) => nodePropertyKeys.node)
   propertyKeys!: NodePropertyKey[];
@@ -34,4 +37,11 @@ export class Node {
 
   @OneToMany(() => Relationship, (relationships) => relationships.toNode)
   incomingRelationships!: Relationship[];
+
+  @Column('timestamp', {
+    nullable: false,
+    name: 'updated_at',
+    default: () => new Date(),
+  })
+  updatedAt: Date;
 }

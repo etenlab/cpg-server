@@ -7,6 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SyncService } from './sync/sync.service';
 import { SyncController } from './sync/sync.controller';
 import { MigrationService } from './migration/migration.service';
+import { SeedController } from './seed/seed.controller';
+import { SeedService } from './seed/seed.service';
 import entities from './model/entities';
 
 @Module({
@@ -24,14 +26,15 @@ import entities from './model/entities';
         schema: configService.get('DB_SCHEMA') || 'public',
         entities,
         synchronize: false,
+        logging: true,
       }),
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature(entities),
     HttpModule,
   ],
-  controllers: [AppController, SyncController],
-  providers: [AppService, SyncService, MigrationService],
+  controllers: [AppController, SyncController, SeedController],
+  providers: [AppService, SyncService, MigrationService, SeedService],
   // entities: [ProgressBibleLanguageDetail],
   exports: [],
 })
