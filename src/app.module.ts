@@ -9,6 +9,7 @@ import { SyncController } from './sync/sync.controller';
 import { MigrationService } from './migration/migration.service';
 import { SeedController } from './seed/seed.controller';
 import { SeedService } from './seed/seed.service';
+import { CoreModule } from './core/core.module';
 import entities from './model/entities';
 
 @Module({
@@ -31,6 +32,7 @@ import entities from './model/entities';
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature(entities),
+    CoreModule,
     HttpModule,
   ],
   controllers: [AppController, SyncController, SeedController],
