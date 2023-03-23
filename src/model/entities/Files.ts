@@ -1,22 +1,29 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { RelationshipPostFile } from './RelationshipPostFile';
 
 @Entity('files', { schema: 'admin' })
+@ObjectType()
 export class Files {
   @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
+  @Field(() => Int)
   id: number;
 
   @Column('character varying', { name: 'file_name' })
-  fileName: string;
+  @Field(() => String)
+  file_name: string;
 
   @Column('integer', { name: 'file_size' })
-  fileSize: number;
+  @Field(() => Int)
+  file_size: number;
 
   @Column('character varying', { name: 'file_type' })
-  fileType: string;
+  @Field(() => String)
+  file_type: string;
 
   @Column('character varying', { name: 'file_url' })
-  fileUrl: string;
+  @Field(() => String)
+  file_url: string;
 
   @OneToOne(
     () => RelationshipPostFile,

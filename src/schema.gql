@@ -1,0 +1,23 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Files {
+  file_name: String!
+  file_size: Int!
+  file_type: String!
+  file_url: String!
+  id: Int!
+}
+
+type Mutation {
+  uploadFile(file: Upload!, file_size: Int!, file_type: String!): Files!
+}
+
+type Query {
+  file(id: Int!): Files!
+  fileList: [Files!]!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
