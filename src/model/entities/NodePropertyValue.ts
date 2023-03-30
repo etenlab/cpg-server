@@ -18,7 +18,7 @@ export class NodePropertyValue {
 
   @ManyToOne(
     () => NodePropertyKey,
-    (nodePropertyKeys) => nodePropertyKeys.values,
+    (nodePropertyKeys) => nodePropertyKeys.value,
   )
   @JoinColumn([{ name: 'node_property_key_id', referencedColumnName: 'id' }])
   nodePropertyKey!: NodePropertyKey;

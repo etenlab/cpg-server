@@ -5,6 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { Node } from './Node';
 import { NodePropertyValue } from './NodePropertyValue';
@@ -18,7 +19,7 @@ export class NodePropertyKey {
     this.updatedAt = this.updatedAt || new Date();
   }
 
-  @Column({ length: 21, primary: true, unique: true, default: () => nanoid() })
+  @Column({ length: 21, primary: true, unique: true, nullable: false })
   id!: string;
 
   @Column('character varying', {
@@ -32,11 +33,11 @@ export class NodePropertyKey {
   @JoinColumn([{ name: 'node_id', referencedColumnName: 'id' }])
   node!: Node;
 
-  @OneToMany(
+  @OneToOne(
     () => NodePropertyValue,
     (nodePropertyValues) => nodePropertyValues.nodePropertyKey,
   )
-  values!: NodePropertyValue[];
+  value!: NodePropertyValue;
 
   @Column('timestamp', {
     nullable: false,

@@ -48,10 +48,10 @@ export class SeedService {
         .substring(2, 10) as unknown as NodeTypeName,
     });
     const node1 = this.nodeRepo.create({
-      typeName: nodeType1.name as unknown as NodeTypeName,
+      nodeType: nodeType1.name as unknown as NodeTypeName,
     });
     const node2 = this.nodeRepo.create({
-      typeName: nodeType2.name as unknown as NodeTypeName,
+      nodeType: nodeType2.name as unknown as NodeTypeName,
     });
 
     const relationshipType = this.relationshipTypeRepo.create({

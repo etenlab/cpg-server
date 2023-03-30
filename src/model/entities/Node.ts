@@ -13,6 +13,7 @@ export class Node {
   }
 
   @Column({
+    type: 'varchar',
     length: 21,
     primary: true,
     unique: true,
@@ -30,7 +31,7 @@ export class Node {
   // type!: NodeType;
 
   @Column('character varying', { name: 'node_type', length: 32 })
-  typeName!: NodeTypeName;
+  nodeType!: NodeTypeName;
 
   @OneToMany(() => Relationship, (relationships) => relationships.fromNode)
   outgoingRelationships!: Relationship[];
