@@ -1,7 +1,7 @@
 import { Column, Entity, Index } from 'typeorm';
 
 @Index('node_types_pkey', ['name'], { unique: true })
-@Entity('node_type', { schema: 'public' })
+@Entity('node_types', { schema: 'public' })
 export class NodeType {
   constructor() {
     this.updatedAt = this.updatedAt || new Date();

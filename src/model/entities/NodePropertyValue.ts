@@ -3,7 +3,7 @@ import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { NodePropertyKey } from './NodePropertyKey';
 
 @Index('node_property_values_pkey', ['id'], { unique: true })
-@Entity('node_property_value', { schema: 'public' })
+@Entity('node_property_values', { schema: 'public' })
 export class NodePropertyValue {
   constructor() {
     this.id = this.id || nanoid();

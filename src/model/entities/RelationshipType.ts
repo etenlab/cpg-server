@@ -2,7 +2,7 @@ import { Column, Entity, Index, OneToMany } from 'typeorm';
 import { Relationship } from './Relationship';
 
 @Index('relationship_types_pkey', ['name'], { unique: true })
-@Entity('relationship_type', { schema: 'public' })
+@Entity('relationship_types', { schema: 'public' })
 export class RelationshipType {
   constructor() {
     this.updatedAt = this.updatedAt || new Date();
@@ -34,9 +34,7 @@ export enum RelationshipTypeName {
   CHAPTER_TO_VERSE = 'chapter-to-verse',
   BOOK_TO_CHAPTER = 'book-to-chapter',
   BIBLE_TO_BOOK = 'bible-to-book',
-
   WORD_TO_ARTICLE = 'word-to-article',
-
   WORD_TO_STRONGS_ENTRY = 'word-to-strongs-entry',
   WORD_TO_ADDITION = 'word-to-addition',
   SECTION_TO_PARAGRAPH = 'section-to-paragraph',
@@ -50,4 +48,8 @@ export enum RelationshipTypeName {
   PARAGRAPH_TO_VERSE = 'paragraph-to-verse',
   VERSE_TO_SENTENCE = 'verse-to-sentence',
   SENTENCE_TO_WORD = 'sentence-to-word',
+  WORD_TO_LANG = 'word-to-language-entry',
+  WORD_TO_TRANSLATION = 'word-to-translation',
+  WORD_MAP = 'word-map',
+  MAP_LANG = 'map-language',
 }

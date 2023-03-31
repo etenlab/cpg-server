@@ -5,7 +5,7 @@ import { RelationshipPropertyKey } from './RelationshipPropertyKey';
 @Index('relationship_property_values_pkey', ['id'], {
   unique: true,
 })
-@Entity('relationship_property_value', { schema: 'public' })
+@Entity('relationship_property_values', { schema: 'public' })
 export class RelationshipPropertyValue {
   constructor() {
     this.id = this.id || nanoid();
@@ -29,14 +29,14 @@ export class RelationshipPropertyValue {
   )
   @JoinColumn([
     {
-      name: 'relationship_property_key_id',
+      name: 'property_key_id',
       referencedColumnName: 'id',
     },
   ])
   propertyKey!: RelationshipPropertyKey;
 
-  @Column('varchar', { name: 'relationship_property_key_id' })
-  relationshipPropertyKeyId!: string;
+  @Column('varchar', { name: 'property_key_id' })
+  propertyKeyId!: string;
 
   @Column('timestamp', {
     nullable: false,

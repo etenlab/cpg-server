@@ -13,7 +13,7 @@ import { nanoid } from 'nanoid';
 @Index('relationship_property_keys_pkey', ['id'], {
   unique: true,
 })
-@Entity('relationship_property_key', { schema: 'public' })
+@Entity('relationship_property_keys', { schema: 'public' })
 export class RelationshipPropertyKey {
   constructor() {
     this.id = this.id || nanoid();
