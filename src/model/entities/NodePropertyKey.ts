@@ -4,7 +4,6 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   OneToOne,
 } from 'typeorm';
 import { Node } from './Node';
@@ -19,7 +18,7 @@ export class NodePropertyKey {
     this.updatedAt = this.updatedAt || new Date();
   }
 
-  @Column({ length: 21, primary: true, unique: true, nullable: false })
+  @Column({ type: 'varchar', length: 21, primary: true, unique: true })
   id!: string;
 
   @Column('character varying', {
@@ -29,9 +28,12 @@ export class NodePropertyKey {
   })
   key!: string | null;
 
-  @ManyToOne(() => Node, (nodes) => nodes.propertyKeys)
+  @ManyToOne(() => Node, (nodes) => nodes.propertyKeys, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'node_id', referencedColumnName: 'id' }])
   node!: Node;
+
+  @Column({ type: 'varchar', length: 21, name: 'node_id' })
+  nodeId!: string;
 
   @OneToOne(
     () => NodePropertyValue,

@@ -10,7 +10,7 @@ export class NodePropertyValue {
     this.updatedAt = this.updatedAt || new Date();
   }
 
-  @Column({ length: 21, unique: true, primary: true, default: () => nanoid() })
+  @Column({ type: 'varchar', length: 21, unique: true, primary: true })
   id!: string;
 
   @Column('jsonb', { name: 'property_value', nullable: true })
@@ -22,6 +22,9 @@ export class NodePropertyValue {
   )
   @JoinColumn([{ name: 'node_property_key_id', referencedColumnName: 'id' }])
   nodePropertyKey!: NodePropertyKey;
+
+  @Column({ type: 'varchar', length: 21, name: 'node_property_key_id' })
+  nodePropertyKeyId!: string;
 
   @Column('timestamp', {
     nullable: false,

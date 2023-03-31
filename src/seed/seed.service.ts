@@ -48,10 +48,10 @@ export class SeedService {
         .substring(2, 10) as unknown as NodeTypeName,
     });
     const node1 = this.nodeRepo.create({
-      nodeType: nodeType1.name as unknown as NodeTypeName,
+      typeName: nodeType1.name as unknown as NodeTypeName,
     });
     const node2 = this.nodeRepo.create({
-      nodeType: nodeType2.name as unknown as NodeTypeName,
+      typeName: nodeType2.name as unknown as NodeTypeName,
     });
 
     const relationshipType = this.relationshipTypeRepo.create({
@@ -77,12 +77,12 @@ export class SeedService {
     });
 
     const relPropKey = this.relationshipPropertyKeyRepo.create({
-      key: Math.random().toString(36).substring(2, 10),
+      propertyKey: Math.random().toString(36).substring(2, 10),
       relationship: relationship,
     });
 
     const relPropValue = this.relationshipPropertyValuesRepo.create({
-      relationshipPropertyKey: relPropKey,
+      propertyKey: relPropKey,
       value: { value: Math.random().toString(36).substring(2, 10) },
     });
 

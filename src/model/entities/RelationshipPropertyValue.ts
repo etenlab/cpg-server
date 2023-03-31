@@ -12,7 +12,12 @@ export class RelationshipPropertyValue {
     this.updatedAt = this.updatedAt || new Date();
   }
 
-  @Column({ length: 21, primary: true, unique: true, default: () => nanoid() })
+  @Column({
+    type: 'character varying',
+    length: 21,
+    primary: true,
+    unique: true,
+  })
   id!: string;
 
   @Column('jsonb', { name: 'property_value', nullable: true })
@@ -20,7 +25,7 @@ export class RelationshipPropertyValue {
 
   @ManyToOne(
     () => RelationshipPropertyKey,
-    (relationshipPropertyKeys) => relationshipPropertyKeys.values,
+    (relationshipPropertyKeys) => relationshipPropertyKeys.propertyValue,
   )
   @JoinColumn([
     {
@@ -28,7 +33,10 @@ export class RelationshipPropertyValue {
       referencedColumnName: 'id',
     },
   ])
-  relationshipPropertyKey!: RelationshipPropertyKey;
+  propertyKey!: RelationshipPropertyKey;
+
+  @Column('varchar', { name: 'relationship_property_key_id' })
+  relationshipPropertyKeyId!: string;
 
   @Column('timestamp', {
     nullable: false,

@@ -1,6 +1,13 @@
-import { Column, Entity, Index, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { NodePropertyKey } from './NodePropertyKey';
-import { NodeTypeName } from './NodeType';
+import { NodeType, NodeTypeName } from './NodeType';
 import { Relationship } from './Relationship';
 import { nanoid } from 'nanoid';
 
@@ -17,21 +24,18 @@ export class Node {
     length: 21,
     primary: true,
     unique: true,
-    nullable: false,
-    // This won't work:
-    // default: () => nanoid(),
   })
   id!: string;
 
-  @OneToMany(() => NodePropertyKey, (nodePropertyKeys) => nodePropertyKeys.node)
+  @ManyToOne(() => NodeType, { onDelete: 'CASCADE' })
+  @JoinColumn([{ name: 'node_type', referencedColumnName: 'name' }])
+  type!: NodeType;
+
+  @Column('varchar', { name: 'node_type' })
+  typeName!: NodeTypeName;
+
+  @OneToMany(() => NodePropertyKey, (nodePropertyKey) => nodePropertyKey.node)
   propertyKeys!: NodePropertyKey[];
-
-  // @ManyToOne(() => NodeType, (nodeTypes) => nodeTypes.nodes)
-  // @JoinColumn([{ name: 'node_type', referencedColumnName: 'name' }])
-  // type!: NodeType;
-
-  @Column('character varying', { name: 'node_type', length: 32 })
-  nodeType!: NodeTypeName;
 
   @OneToMany(() => Relationship, (relationships) => relationships.fromNode)
   outgoingRelationships!: Relationship[];

@@ -4,7 +4,7 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { Relationship } from './Relationship';
 import { RelationshipPropertyValue } from './RelationshipPropertyValue';
@@ -20,29 +20,29 @@ export class RelationshipPropertyKey {
     this.updatedAt = this.updatedAt || new Date();
   }
 
-  @Column({ length: 21, primary: true, unique: true, default: () => nanoid() })
+  @Column({
+    type: 'varchar',
+    length: 21,
+    primary: true,
+    unique: true,
+  })
   id!: string;
 
-  @Column('character varying', {
-    name: 'property_key',
-    nullable: true,
-    length: 64,
-  })
-  key!: string | null;
+  @Column('varchar', { name: 'property_key' })
+  propertyKey!: string;
 
-  @ManyToOne(
-    () => Relationship,
-    (relationships) => relationships.relationshipPropertyKeys,
-  )
+  @ManyToOne(() => Relationship, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'relationship_id', referencedColumnName: 'id' }])
   relationship!: Relationship;
 
-  @OneToMany(
+  @Column({ type: 'varchar', name: 'relationship_id' })
+  relationshipId!: string;
+
+  @OneToOne(
     () => RelationshipPropertyValue,
-    (relationshipPropertyValues) =>
-      relationshipPropertyValues.relationshipPropertyKey,
+    (relationshipPropertyValue) => relationshipPropertyValue.propertyKey,
   )
-  values!: RelationshipPropertyValue[];
+  propertyValue!: RelationshipPropertyValue;
 
   @Column('timestamp', {
     nullable: false,
