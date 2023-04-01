@@ -32,8 +32,8 @@ function jsonToText(value: string | null) {
 // Make sure to have correct order of tables to satisfy foreign key constraints
 const tableConfig: SyncTableConfig[] = [
   {
-    localTableName: 'node_type',
-    remoteTableName: 'node_type',
+    localTableName: 'node_types',
+    remoteTableName: 'node_types',
     localPK: 'type_name',
     columns: [
       {
@@ -42,8 +42,8 @@ const tableConfig: SyncTableConfig[] = [
     ],
   },
   {
-    localTableName: 'node',
-    remoteTableName: 'node',
+    localTableName: 'nodes',
+    remoteTableName: 'nodes',
     localPK: 'id',
     columns: [
       {
@@ -55,8 +55,8 @@ const tableConfig: SyncTableConfig[] = [
     ],
   },
   {
-    localTableName: 'node_property_key',
-    remoteTableName: 'node_property_key',
+    localTableName: 'node_property_keys',
+    remoteTableName: 'node_property_keys',
     localPK: 'id',
     columns: [
       {
@@ -71,8 +71,8 @@ const tableConfig: SyncTableConfig[] = [
     ],
   },
   {
-    localTableName: 'node_property_value',
-    remoteTableName: 'node_property_value',
+    localTableName: 'node_property_values',
+    remoteTableName: 'node_property_values',
     localPK: 'id',
     columns: [
       {
@@ -89,8 +89,8 @@ const tableConfig: SyncTableConfig[] = [
     ],
   },
   {
-    localTableName: 'relationship_type',
-    remoteTableName: 'relationship_type',
+    localTableName: 'relationship_types',
+    remoteTableName: 'relationship_types',
     localPK: 'type_name',
     columns: [
       {
@@ -99,8 +99,8 @@ const tableConfig: SyncTableConfig[] = [
     ],
   },
   {
-    localTableName: 'relationship',
-    remoteTableName: 'relationship',
+    localTableName: 'relationships',
+    remoteTableName: 'relationships',
     localPK: 'id',
     columns: [
       {
@@ -118,8 +118,8 @@ const tableConfig: SyncTableConfig[] = [
     ],
   },
   {
-    localTableName: 'relationship_property_key',
-    remoteTableName: 'relationship_property_key',
+    localTableName: 'relationship_property_keys',
+    remoteTableName: 'relationship_property_keys',
     localPK: 'id',
     columns: [
       {
@@ -134,8 +134,8 @@ const tableConfig: SyncTableConfig[] = [
     ],
   },
   {
-    localTableName: 'relationship_property_value',
-    remoteTableName: 'relationship_property_value',
+    localTableName: 'relationship_property_values',
+    remoteTableName: 'relationship_property_values',
     localPK: 'id',
     columns: [
       {
