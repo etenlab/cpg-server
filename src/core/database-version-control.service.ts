@@ -33,7 +33,7 @@ export class DatabaseVersionControlService {
       [],
     );
 
-    return res.rows[0].exists;
+    return res.rows.at(0)?.exists;
   }
 
   async getSchemaVersion(): Promise<number> {
@@ -47,7 +47,7 @@ export class DatabaseVersionControlService {
       [],
     );
 
-    const version = res.rows[0].version;
+    const version = res.rows.at(0)?.version;
 
     if (version) {
       return version;

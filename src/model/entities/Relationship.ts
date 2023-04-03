@@ -19,18 +19,8 @@ export class Relationship {
     this.updatedAt = this.updatedAt || new Date();
   }
 
-  @Column({ length: 21, primary: true, unique: true, default: () => nanoid() })
+  @Column({ type: 'varchar', length: 21, primary: true, unique: true })
   id!: string;
-
-  @OneToMany(
-    () => RelationshipPropertyKey,
-    (relationshipPropertyKeys) => relationshipPropertyKeys.relationship,
-  )
-  relationshipPropertyKeys!: RelationshipPropertyKey[];
-
-  @ManyToOne(() => Node, (nodes) => nodes.outgoingRelationships)
-  @JoinColumn([{ name: 'from_node_id', referencedColumnName: 'id' }])
-  fromNode!: Node;
 
   @ManyToOne(
     () => RelationshipType,
@@ -39,12 +29,28 @@ export class Relationship {
   @JoinColumn([{ name: 'relationship_type', referencedColumnName: 'name' }])
   type!: RelationshipType;
 
-  @Column('character varying', { name: 'relationship_type', length: 32 })
+  @Column('varchar', { name: 'relationship_type' })
   typeName!: RelationshipTypeName;
 
-  @ManyToOne(() => Node, (nodes) => nodes.incomingRelationships)
+  @OneToMany(
+    () => RelationshipPropertyKey,
+    (relationshipPropertyKeys) => relationshipPropertyKeys.relationship,
+  )
+  propertyKeys!: RelationshipPropertyKey[];
+
+  @ManyToOne(() => Node, { onDelete: 'CASCADE' })
+  @JoinColumn([{ name: 'from_node_id', referencedColumnName: 'id' }])
+  fromNode!: Node;
+
+  @Column('varchar', { name: 'from_node_id' })
+  fromNodeId!: string;
+
+  @ManyToOne(() => Node, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'to_node_id', referencedColumnName: 'id' }])
   toNode!: Node;
+
+  @Column('varchar', { name: 'to_node_id' })
+  toNodeId!: string;
 
   @Column('timestamp', {
     nullable: false,

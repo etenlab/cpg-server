@@ -5,14 +5,19 @@ import { RelationshipPropertyKey } from './RelationshipPropertyKey';
 @Index('relationship_property_values_pkey', ['id'], {
   unique: true,
 })
-@Entity('relationship_property_value', { schema: 'public' })
+@Entity('relationship_property_values', { schema: 'public' })
 export class RelationshipPropertyValue {
   constructor() {
     this.id = this.id || nanoid();
     this.updatedAt = this.updatedAt || new Date();
   }
 
-  @Column({ length: 21, primary: true, unique: true, default: () => nanoid() })
+  @Column({
+    type: 'character varying',
+    length: 21,
+    primary: true,
+    unique: true,
+  })
   id!: string;
 
   @Column('jsonb', { name: 'property_value', nullable: true })
@@ -20,15 +25,18 @@ export class RelationshipPropertyValue {
 
   @ManyToOne(
     () => RelationshipPropertyKey,
-    (relationshipPropertyKeys) => relationshipPropertyKeys.values,
+    (relationshipPropertyKeys) => relationshipPropertyKeys.propertyValue,
   )
   @JoinColumn([
     {
-      name: 'relationship_property_key_id',
+      name: 'property_key_id',
       referencedColumnName: 'id',
     },
   ])
-  relationshipPropertyKey!: RelationshipPropertyKey;
+  propertyKey!: RelationshipPropertyKey;
+
+  @Column('varchar', { name: 'property_key_id' })
+  propertyKeyId!: string;
 
   @Column('timestamp', {
     nullable: false,
