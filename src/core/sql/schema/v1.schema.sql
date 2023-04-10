@@ -86,8 +86,8 @@ create table admin.email_tokens(
 );
 
 create table admin.reset_tokens(
-  token varchar(64) primary key,
-  user_id bigint not null references admin.users(user_id),
+  token varchar(250) primary key,
+  user_id varchar(100) not null,
   created_at timestamp not null default current_timestamp
 );
 

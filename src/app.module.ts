@@ -7,6 +7,12 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { join } from 'path';
 
+import { AwsSdkModule } from 'aws-sdk-v3-nest';
+import { SESClient } from '@aws-sdk/client-ses';
+
+import { SesManagerModule } from './ses-manager/ses-manager.module';
+import { SesManagerService } from './ses-manager/ses-manager.service';
+
 import { AppController } from './app.controller';
 import { SyncController } from './sync/sync.controller';
 import { SeedController } from './seed/seed.controller';
@@ -20,9 +26,20 @@ import { CoreModule } from './core/core.module';
 import { FileModule } from './file/file.module';
 
 import entities from './model/entities';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
+    AwsSdkModule.register({
+      isGlobal: true,
+      client: new SESClient({
+        region: 'us-east-2',
+        credentials: {
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        },
+      }),
+    }),
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -52,9 +69,17 @@ import entities from './model/entities';
     CoreModule,
     FileModule,
     HttpModule,
+    SesManagerModule,
+    UsersModule,
   ],
   controllers: [AppController, SyncController, SeedController],
-  providers: [AppService, SyncService, MigrationService, SeedService],
+  providers: [
+    AppService,
+    SyncService,
+    MigrationService,
+    SeedService,
+    SesManagerService,
+  ],
   // entities: [ProgressBibleLanguageDetail],
   exports: [],
 })

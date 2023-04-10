@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Files {
   file_name: String!
   file_size: Int!
@@ -11,12 +16,21 @@ type Files {
 }
 
 type Mutation {
+  forgotPassword(email: String!): ResetTokens!
+  resetUserPassword(password: String!, token: String!): Boolean!
   uploadFile(file: Upload!, file_size: Int!, file_type: String!): Files!
 }
 
 type Query {
   file(id: Int!): Files!
   fileList: [Files!]!
+  isTokenValid(token: String!): ResetTokens!
+}
+
+type ResetTokens {
+  createdAt: DateTime!
+  token: String!
+  user: String!
 }
 
 """The `Upload` scalar type represents a file upload."""

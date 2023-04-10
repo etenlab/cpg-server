@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { corsAllowedOrigins } from './main';
+// import { corsAllowedOrigins } from './main';
 
 const pkg = readFileSync(resolve(process.cwd(), 'package.json'));
 const { version, name } = JSON.parse(pkg.toString());
@@ -15,6 +15,6 @@ export class AppController {
 
   @Get('cors')
   getCors() {
-    return { corsAllowedOrigins: corsAllowedOrigins };
+    return { corsAllowedOrigins: '*' };
   }
 }
