@@ -195,59 +195,67 @@ create table admin.site_text_translations(
 -- GRAPH ------------------------------------------------------------
 
 create table admin.node_types (
-  type_name varchar(32) primary key
+  type_name varchar(32) primary key,
+  updated_at timestamp null default CURRENT_TIMESTAMP
 );
 
 create table admin.nodes (
-  node_id bigserial primary key,
-  node_type varchar(32) references admin.node_types(type_name)
+  id varchar(21) primary key,
+  node_type varchar(32) references admin.node_types(type_name),
+  updated_at timestamp null default CURRENT_TIMESTAMP
 );
 
 create table admin.node_property_keys (
-  node_property_key_id bigserial primary key,
-  node_id bigint references admin.nodes(node_id) not null,
-  property_key varchar(64)
+  id varchar(21) primary key,
+  node_id varchar(21) references admin.nodes(id) not null,
+  property_key varchar(64) not null,
+  updated_at timestamp null default CURRENT_TIMESTAMP
 );
 
 create index idx_node_property_keys_node_id_key on admin.node_property_keys (node_id);
 
 create table admin.node_property_values (
-  node_property_value_id bigserial primary key,
-  node_property_key_id bigint references admin.node_property_keys(node_property_key_id) not null,
-  property_value jsonb
+  id varchar(21) primary key,
+  property_value jsonb null,
+  node_property_key_id varchar(21) references admin.node_property_keys(id) not null,
+  updated_at timestamp null default CURRENT_TIMESTAMP
 );
 
 create index idx_node_property_values_key_id on admin.node_property_values (node_property_key_id);
 
 create table admin.relationship_types (
-  type_name varchar(32) primary key
+  type_name varchar(32) primary key,
+  updated_at timestamp null default CURRENT_TIMESTAMP
 );
 
 create table admin.relationships (
-  relationship_id bigserial primary key,
+  id varchar(21) primary key,
   relationship_type varchar(32) references admin.relationship_types(type_name),
-  from_node_id bigint references admin.nodes(node_id),
-  to_node_id bigint references admin.nodes(node_id)
+  from_node_id varchar(21) references admin.nodes(id),
+  to_node_id varchar(21) references admin.nodes(id),
+  updated_at timestamp null default CURRENT_TIMESTAMP
 );
 
 create index idx_relationships_from_node_id on admin.relationships (from_node_id);
 create index idx_relationships_to_node_id on admin.relationships (to_node_id);
 
 create table admin.relationship_property_keys (
-  relationship_property_key_id bigserial primary key,
-  relationship_id bigint references admin.relationships(relationship_id) not null,
-  property_key varchar(64)
+  id varchar(21) primary key,
+  property_key varchar(64) not null,
+  relationship_id varchar(21) references admin.relationships(id) not null,
+  updated_at timestamp null default CURRENT_TIMESTAMP
 );
 
 create index idx_relationship_property_keys_relationship_id on admin.relationship_property_keys (relationship_id);
 
 create table admin.relationship_property_values (
-  relationship_property_value_id bigserial primary key,
-  relationship_property_key_id bigint references admin.relationship_property_keys(relationship_property_key_id) not null,
-  property_value jsonb
+  id varchar(21) primary key,
+  property_value jsonb null,
+  property_key_id varchar(21) references admin.relationship_property_keys(id) not null,
+  updated_at timestamp null default CURRENT_TIMESTAMP
 );
 
-create index idx_relationship_property_values_key_id on admin.relationship_property_values (relationship_property_key_id);
+create index idx_relationship_property_values_key_id on admin.relationship_property_values (property_key_id);
 
 insert into admin.node_types (type_name) values
   ('word'),
@@ -260,11 +268,16 @@ insert into admin.node_types (type_name) values
   ('section'),
   ('book'),
   ('bible'),
-
   ('definition'),
   ('article'),
   ('lexical-entry'),
-  ('strongs-entry');
+  ('strongs-entry'),
+  ('map'),
+  ('language'),
+  ('word-to-language-entry'),
+  ('word-to-translation'),
+  ('word-map'),
+  ('map-language');
 
 insert into admin.relationship_types (type_name) values
   ('word-sequence-to-word'),
@@ -275,9 +288,7 @@ insert into admin.relationship_types (type_name) values
   ('chapter-to-section'),
   ('chapter-to-paragraph'),
   ('bible-to-book'),
-  
   ('word-to-article'),
-
   ('word-to-strongs-entry'),
   ('word-to-addition'),
   ('section-to-paragraph'),
@@ -288,7 +299,11 @@ insert into admin.relationship_types (type_name) values
   ('paragraph-to-sentence'),
   ('paragraph-to-verse'),
   ('verse-to-sentence'),
-  ('sentence-to-word');
+  ('sentence-to-word'),
+  ('word-to-language-entry'),
+  ('word-to-translation'),
+  ('word-map'),
+  ('map-language');
 
 -- voting ---------------------------------------------------
 create table admin.votables(

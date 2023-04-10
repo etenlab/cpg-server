@@ -4,39 +4,41 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { Node } from './Node';
 import { NodePropertyValue } from './NodePropertyValue';
 import { nanoid } from 'nanoid';
 
 @Index('node_property_keys_pkey', ['id'], { unique: true })
-@Entity('node_property_key', { schema: 'public' })
+@Entity('node_property_keys', { schema: 'public' })
 export class NodePropertyKey {
   constructor() {
     this.id = this.id || nanoid();
     this.updatedAt = this.updatedAt || new Date();
   }
 
-  @Column({ length: 21, primary: true, unique: true, default: () => nanoid() })
+  @Column({ type: 'varchar', length: 21, primary: true, unique: true })
   id!: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'property_key',
-    nullable: true,
     length: 64,
   })
-  key!: string | null;
+  key!: string;
 
-  @ManyToOne(() => Node, (nodes) => nodes.propertyKeys)
+  @ManyToOne(() => Node, (nodes) => nodes.propertyKeys, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'node_id', referencedColumnName: 'id' }])
   node!: Node;
 
-  @OneToMany(
+  @Column({ type: 'varchar', length: 21, name: 'node_id' })
+  nodeId!: string;
+
+  @OneToOne(
     () => NodePropertyValue,
     (nodePropertyValues) => nodePropertyValues.nodePropertyKey,
   )
-  values!: NodePropertyValue[];
+  value!: NodePropertyValue;
 
   @Column('timestamp', {
     nullable: false,

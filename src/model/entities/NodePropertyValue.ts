@@ -3,14 +3,14 @@ import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { NodePropertyKey } from './NodePropertyKey';
 
 @Index('node_property_values_pkey', ['id'], { unique: true })
-@Entity('node_property_value', { schema: 'public' })
+@Entity('node_property_values', { schema: 'public' })
 export class NodePropertyValue {
   constructor() {
     this.id = this.id || nanoid();
     this.updatedAt = this.updatedAt || new Date();
   }
 
-  @Column({ length: 21, unique: true, primary: true, default: () => nanoid() })
+  @Column({ type: 'varchar', length: 21, unique: true, primary: true })
   id!: string;
 
   @Column('jsonb', { name: 'property_value', nullable: true })
@@ -18,10 +18,13 @@ export class NodePropertyValue {
 
   @ManyToOne(
     () => NodePropertyKey,
-    (nodePropertyKeys) => nodePropertyKeys.values,
+    (nodePropertyKeys) => nodePropertyKeys.value,
   )
   @JoinColumn([{ name: 'node_property_key_id', referencedColumnName: 'id' }])
   nodePropertyKey!: NodePropertyKey;
+
+  @Column({ type: 'varchar', length: 21, name: 'node_property_key_id' })
+  nodePropertyKeyId!: string;
 
   @Column('timestamp', {
     nullable: false,

@@ -1,7 +1,7 @@
 import { Column, Entity, Index } from 'typeorm';
 
 @Index('node_types_pkey', ['name'], { unique: true })
-@Entity('node_type', { schema: 'public' })
+@Entity('node_types', { schema: 'public' })
 export class NodeType {
   constructor() {
     this.updatedAt = this.updatedAt || new Date();
@@ -38,4 +38,10 @@ export enum NodeTypeName {
   ARTICLE = 'article',
   LEXICAL_ENTRY = 'lexical-entry',
   STRONGS_ENTRY = 'strongs-entry',
+  MAP = 'map',
+  LANGUAGE = 'language',
+  WORD_TO_LANG = 'word-to-language-entry',
+  WORD_TO_TRANSLATION = 'word-to-translation',
+  WORD_MAP = 'word-map',
+  MAP_LANG = 'map-language',
 }
