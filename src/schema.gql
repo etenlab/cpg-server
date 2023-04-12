@@ -18,6 +18,7 @@ type Files {
 type Mutation {
   forgotPassword(email: String!): ResetTokens!
   resetUserPassword(password: String!, token: String!): Boolean!
+  updatePassword(password: String!, token: String!): Boolean!
   uploadFile(file: Upload!, file_size: Int!, file_type: String!): Files!
 }
 

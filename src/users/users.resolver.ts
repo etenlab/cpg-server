@@ -4,6 +4,7 @@ import { Users, ResetTokens } from 'src/model/entities';
 import axios from 'axios';
 import * as querystring from 'qs';
 import { NotFoundError } from 'rxjs';
+import { decodeToken, isTokenValid } from 'src/utils/AuthUtils';
 
 @Resolver(() => Users)
 export class UsersResolver {
@@ -49,7 +50,6 @@ export class UsersResolver {
                 if (!resp.data.length) {
                   errorMessage = 'Email address not found';
                 } else {
-                  console.log('a');
                   kcUserId = resp.data[0].id;
                   const tokenData = await this.usersService.generateResetToken(
                     resp.data[0],
@@ -93,7 +93,6 @@ export class UsersResolver {
     @Args({ name: 'token', type: () => String }) token: string,
     @Args({ name: 'password', type: () => String }) password: string,
   ): Promise<any> {
-    console.log(token);
     const tokenData: any = await this.usersService.decodeToken(token);
     let status = false;
     if (tokenData) {
@@ -150,6 +149,67 @@ export class UsersResolver {
       return true;
     } else {
       throw new NotFoundError('Token invalid or expired');
+    }
+  }
+
+  @Mutation(() => Boolean)
+  async updatePassword(
+    @Args({ name: 'token', type: () => String }) token: string,
+    @Args({ name: 'password', type: () => String }) password: string,
+  ): Promise<any> {
+    let status = false;
+    const tokenData: any = decodeToken(token);
+    if (isTokenValid(tokenData)) {
+      try {
+        await axios
+          .post(
+            `${process.env.KEYCLOAK_URL}/realms/master/protocol/openid-connect/token`,
+            querystring.stringify({
+              client_id: 'admin-cli', //process.env.KEYCLOAK_CLIENT_ID,
+              client_secret: process.env.KEYCLOAK_CLIENT_SECRET,
+              grant_type: 'client_credentials', //'password'
+            }),
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+            },
+          )
+          .then(async (response) => {
+            try {
+              await axios
+                .put(
+                  `${process.env.KEYCLOAK_URL}/admin/realms/${process.env.KEYCLOAK_REALM}/users/${tokenData.sub}/reset-password`,
+                  JSON.stringify({
+                    temporary: false,
+                    type: 'password',
+                    value: password,
+                  }),
+                  {
+                    headers: {
+                      'Content-Type': 'application/json',
+                      Authorization: `Bearer ${response.data.access_token}`,
+                    },
+                  },
+                )
+                .then(async () => {
+                  status = true;
+                });
+            } catch (error: any) {
+              throw new NotFoundError(
+                'Token invalid or expired: ' + error.message,
+              );
+            }
+          })
+          .catch((error: any) => {
+            throw new NotFoundError(
+              'Token invalid or expired: ' + error.message,
+            );
+          });
+      } catch (error: any) {
+        throw new NotFoundError('Token invalid or expired: ' + error.message);
+      }
+      return status;
     }
   }
 }
