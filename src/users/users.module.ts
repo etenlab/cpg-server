@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
-import { Users } from 'src/model/entities';
+import { User } from 'src/model/entities';
 import { ResetTokens } from 'src/model/entities';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SesManagerService } from 'src/ses-manager/ses-manager.service';
@@ -10,7 +10,7 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users, ResetTokens]),
+    TypeOrmModule.forFeature([User, ResetTokens]),
     AwsSdkModule,
     JwtModule.register({ secret: process.env.JWT_KEY }),
   ],

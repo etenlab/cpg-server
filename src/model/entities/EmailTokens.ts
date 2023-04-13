@@ -1,5 +1,11 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { Users } from './Users';
+import {
+  Column,
+  Entity,
+  Index,
+  // JoinColumn,
+  // ManyToOne
+} from 'typeorm';
+// import { User } from '../entities';
 
 @Index('email_tokens_pkey', ['token'], { unique: true })
 @Entity('email_tokens', { schema: 'admin' })
@@ -16,7 +22,8 @@ export class EmailTokens {
   })
   createdAt: Date;
 
-  @ManyToOne(() => Users, (users) => users.emailTokens)
-  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-  user: Users;
+  // comented out when harmonizing entities with crowd.bible
+  // @ManyToOne(() => User, (users) => users.emailTokens)
+  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  // user: User;
 }

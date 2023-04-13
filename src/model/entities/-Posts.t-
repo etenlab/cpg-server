@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 // import { Users } from './Users';
-import { Discussions } from './Discussions';
+import { Discussion } from '../entities';
 import { Reactions } from './Reactions';
 import { RelationshipPostFile } from './RelationshipPostFile';
 
@@ -45,11 +45,11 @@ export class Posts {
   @Column([{ name: 'user_id' }])
   userId: string;
 
-  @ManyToOne(() => Discussions, (discussions) => discussions.posts, {
+  @ManyToOne(() => Discussion, (discussions) => discussions.posts, {
     onDelete: 'CASCADE',
   })
   @JoinColumn([{ name: 'discussion_id', referencedColumnName: 'id' }])
-  discussion: Discussions;
+  discussion: Discussion;
 
   @OneToMany(() => Reactions, (reactions) => reactions.post)
   reactions: Reactions[];
