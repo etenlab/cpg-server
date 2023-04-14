@@ -13,16 +13,19 @@ import { User } from '@eten-lab/crowd-bible-models';
 import { Reaction } from '@eten-lab/crowd-bible-models';
 import { RelationshipPostFile } from '@eten-lab/crowd-bible-models';
 import { File } from '@eten-lab/crowd-bible-models';
+
+import { Node } from '@eten-lab/crowd-bible-models';
+import { NodePropertyKey } from '@eten-lab/crowd-bible-models';
+
+import { NodePropertyValue } from '@eten-lab/crowd-bible-models';
+import { NodeType } from '@eten-lab/crowd-bible-models';
+import { RelationshipPropertyKey } from '@eten-lab/crowd-bible-models';
+import { RelationshipPropertyValue } from '@eten-lab/crowd-bible-models';
+import { RelationshipType } from '@eten-lab/crowd-bible-models';
+import { Relationship } from '@eten-lab/crowd-bible-models';
+
 import { BallotEntries } from './entities/BallotEntries';
 import { Elections } from './entities/Elections';
-import { NodePropertyKey } from './entities/NodePropertyKey';
-import { NodePropertyValue } from './entities/NodePropertyValue';
-import { NodeType } from './entities/NodeType';
-import { Node } from './entities/Node';
-import { RelationshipPropertyKey } from './entities/RelationshipPropertyKey';
-import { RelationshipPropertyValue } from './entities/RelationshipPropertyValue';
-import { RelationshipType } from './entities/RelationshipType';
-import { Relationship } from './entities/Relationship';
 import { Votables } from './entities/Votables';
 import { Votes } from './entities/Votes';
 import { Avatars } from './entities/Avatars';
@@ -57,7 +60,6 @@ export const entities = [
   WebsocketSessions,
   RelationshipPostFile,
   File,
-  // FileDecoratedGQL,
 ];
 
 export {
@@ -84,7 +86,6 @@ export {
   WebsocketSessions,
   RelationshipPostFile,
   File,
-  // FileDecoratedGQL,
   Votables,
 };
 
