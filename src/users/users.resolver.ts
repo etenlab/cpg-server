@@ -67,7 +67,7 @@ export class UsersResolver {
         });
     } catch (error: any) {
       errorMessage = error.message;
-      //throw new NotFoundError('Error' + error.message);
+      throw new NotFoundError('Error' + error.message);
     }
     if (kcUserId) {
       return await this.usersService.getResetTokens(kcUserId);
