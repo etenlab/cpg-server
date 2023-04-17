@@ -62,7 +62,7 @@ export class UsersResolver {
               });
           } catch (error: any) {
             errorMessage = error.message;
-            //throw new NotFoundError('Error' + error.message);
+            throw new NotFoundError('Error' + error.message);
           }
         });
     } catch (error: any) {
