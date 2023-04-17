@@ -226,7 +226,7 @@ export class SyncService {
           throw new Error(`Cannot find config for table ${entry.table}`);
         }
 
-        const { localTableName, localPK, columns } = config;
+        const { localTableName, localPK, columns, schema } = config;
         const localRows = [] as any[];
 
         for (const row of entry.rows) {
@@ -268,10 +268,12 @@ export class SyncService {
           });
 
         const [query, params] = sql.getQueryAndParameters();
-        const qr = query.replace(tablePlaceholder, localTableName);
+        const qr = query.replace(
+          tablePlaceholder,
+          `${schema}"."${localTableName}`,
+        );
 
-        const res = await em.query(qr, params);
-        console.log('---------------------------------', res);
+        await em.query(qr, params);
       });
     }
   }
