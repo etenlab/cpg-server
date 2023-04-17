@@ -7,22 +7,22 @@
  * npx typeorm-model-generator -h postgres -d eil -u postgres -x example -e postgres -o ./src/model
  */
 
-import { Discussion } from '@eten-lab/crowd-bible-models';
-import { Post } from '@eten-lab/crowd-bible-models';
-import { User } from '@eten-lab/crowd-bible-models';
-import { Reaction } from '@eten-lab/crowd-bible-models';
-import { RelationshipPostFile } from '@eten-lab/crowd-bible-models';
-import { File } from '@eten-lab/crowd-bible-models';
+import { Discussion } from '@eten-lab/models';
+import { Post } from '@eten-lab/models';
+import { User } from '@eten-lab/models';
+import { Reaction } from '@eten-lab/models';
+import { RelationshipPostFile } from '@eten-lab/models';
+import { File } from '@eten-lab/models';
 
-import { Node } from '@eten-lab/crowd-bible-models';
-import { NodePropertyKey } from '@eten-lab/crowd-bible-models';
+import { Node } from '@eten-lab/models';
+import { NodePropertyKey } from '@eten-lab/models';
 
-import { NodePropertyValue } from '@eten-lab/crowd-bible-models';
-import { NodeType } from '@eten-lab/crowd-bible-models';
-import { RelationshipPropertyKey } from '@eten-lab/crowd-bible-models';
-import { RelationshipPropertyValue } from '@eten-lab/crowd-bible-models';
-import { RelationshipType } from '@eten-lab/crowd-bible-models';
-import { Relationship } from '@eten-lab/crowd-bible-models';
+import { NodePropertyValue } from '@eten-lab/models';
+import { NodeType } from '@eten-lab/models';
+import { RelationshipPropertyKey } from '@eten-lab/models';
+import { RelationshipPropertyValue } from '@eten-lab/models';
+import { RelationshipType } from '@eten-lab/models';
+import { Relationship } from '@eten-lab/models';
 
 import { BallotEntries } from './entities/BallotEntries';
 import { Elections } from './entities/Elections';

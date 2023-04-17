@@ -43,6 +43,7 @@ const tableConfigFactory = (
       localPK: 'type_name',
       schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
+        { local: 'updated_at' },
         {
           local: 'type_name',
         },
@@ -52,8 +53,9 @@ const tableConfigFactory = (
       localTableName: 'nodes',
       remoteTableName: 'nodes',
       localPK: 'id',
-      schema: 'admin',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
+        { local: 'updated_at' },
         {
           local: 'id',
         },
@@ -66,8 +68,9 @@ const tableConfigFactory = (
       localTableName: 'node_property_keys',
       remoteTableName: 'node_property_keys',
       localPK: 'id',
-      schema: 'admin',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
+        { local: 'updated_at' },
         {
           local: 'id',
         },
@@ -83,8 +86,9 @@ const tableConfigFactory = (
       localTableName: 'node_property_values',
       remoteTableName: 'node_property_values',
       localPK: 'id',
-      schema: 'admin',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
+        { local: 'updated_at' },
         {
           local: 'id',
         },
@@ -102,8 +106,9 @@ const tableConfigFactory = (
       localTableName: 'relationship_types',
       remoteTableName: 'relationship_types',
       localPK: 'type_name',
-      schema: 'admin',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
+        { local: 'updated_at' },
         {
           local: 'type_name',
         },
@@ -113,8 +118,9 @@ const tableConfigFactory = (
       localTableName: 'relationships',
       remoteTableName: 'relationships',
       localPK: 'id',
-      schema: 'admin',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
+        { local: 'updated_at' },
         {
           local: 'id',
         },
@@ -133,8 +139,9 @@ const tableConfigFactory = (
       localTableName: 'relationship_property_keys',
       remoteTableName: 'relationship_property_keys',
       localPK: 'id',
-      schema: 'admin',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
+        { local: 'updated_at' },
         {
           local: 'id',
         },
@@ -150,8 +157,9 @@ const tableConfigFactory = (
       localTableName: 'relationship_property_values',
       remoteTableName: 'relationship_property_values',
       localPK: 'id',
-      schema: 'admin',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
+        { local: 'updated_at' },
         {
           local: 'id',
         },
@@ -234,7 +242,7 @@ export class SyncService {
               }
             } else {
               console.error(
-                `Cannot find column for key ${key} in table ${entry.table}`,
+                `Cannot find column for key ${key} in the config of table ${entry.table}`,
               );
             }
 
@@ -260,8 +268,10 @@ export class SyncService {
           });
 
         const [query, params] = sql.getQueryAndParameters();
+        const qr = query.replace(tablePlaceholder, localTableName);
 
-        await em.query(query.replace(tablePlaceholder, localTableName), params);
+        const res = await em.query(qr, params);
+        console.log('---------------------------------', res);
       });
     }
   }
