@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
-import { DEFAULT_SCHEMA } from '../constants';
+import { DEFAULT_SCHEMA, TableNameConst } from '../constants';
 import { ConfigService } from '@nestjs/config';
 
 type SyncTableConfig = {
@@ -38,8 +38,8 @@ const tableConfigFactory = (
 ): SyncTableConfig[] => {
   return [
     {
-      localTableName: 'node_types',
-      remoteTableName: 'node_types',
+      localTableName: TableNameConst.NODE_TYPES,
+      remoteTableName: TableNameConst.NODE_TYPES,
       localPK: 'type_name',
       schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
@@ -65,8 +65,8 @@ const tableConfigFactory = (
       ],
     },
     {
-      localTableName: 'node_property_keys',
-      remoteTableName: 'node_property_keys',
+      localTableName: TableNameConst.NODE_PROPERTY_KEYS,
+      remoteTableName: TableNameConst.NODE_PROPERTY_KEYS,
       localPK: 'id',
       schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
@@ -83,8 +83,8 @@ const tableConfigFactory = (
       ],
     },
     {
-      localTableName: 'node_property_values',
-      remoteTableName: 'node_property_values',
+      localTableName: TableNameConst.NODE_PROPERTY_VALUES,
+      remoteTableName: TableNameConst.NODE_PROPERTY_VALUES,
       localPK: 'id',
       schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
@@ -103,8 +103,8 @@ const tableConfigFactory = (
       ],
     },
     {
-      localTableName: 'relationship_types',
-      remoteTableName: 'relationship_types',
+      localTableName: TableNameConst.RELATIONSHIP_TYPES,
+      remoteTableName: TableNameConst.RELATIONSHIP_TYPES,
       localPK: 'type_name',
       schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
@@ -115,8 +115,8 @@ const tableConfigFactory = (
       ],
     },
     {
-      localTableName: 'relationships',
-      remoteTableName: 'relationships',
+      localTableName: TableNameConst.RELATIONSHIPS,
+      remoteTableName: TableNameConst.RELATIONSHIPS,
       localPK: 'id',
       schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
@@ -136,8 +136,8 @@ const tableConfigFactory = (
       ],
     },
     {
-      localTableName: 'relationship_property_keys',
-      remoteTableName: 'relationship_property_keys',
+      localTableName: TableNameConst.RELATIONSHIP_PROPERTY_KEYS,
+      remoteTableName: TableNameConst.RELATIONSHIP_PROPERTY_KEYS,
       localPK: 'id',
       schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
@@ -154,8 +154,8 @@ const tableConfigFactory = (
       ],
     },
     {
-      localTableName: 'relationship_property_values',
-      remoteTableName: 'relationship_property_values',
+      localTableName: TableNameConst.RELATIONSHIP_PROPERTY_VALUES,
+      remoteTableName: TableNameConst.RELATIONSHIP_PROPERTY_VALUES,
       localPK: 'id',
       schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
       columns: [
