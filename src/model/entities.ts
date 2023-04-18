@@ -7,48 +7,51 @@
  * npx typeorm-model-generator -h postgres -d eil -u postgres -x example -e postgres -o ./src/model
  */
 
-import { Discussions } from './entities/Discussions';
-import { Reactions } from './entities/Reactions';
+import { Discussion } from '@eten-lab/models';
+import { Post } from '@eten-lab/models';
+import { User } from '@eten-lab/models';
+import { Reaction } from '@eten-lab/models';
+import { RelationshipPostFile } from '@eten-lab/models';
+import { File } from '@eten-lab/models';
+
+import { Node } from '@eten-lab/models';
+import { NodePropertyKey } from '@eten-lab/models';
+
+import { NodePropertyValue } from '@eten-lab/models';
+import { NodeType } from '@eten-lab/models';
+import { RelationshipPropertyKey } from '@eten-lab/models';
+import { RelationshipPropertyValue } from '@eten-lab/models';
+import { RelationshipType } from '@eten-lab/models';
+import { Relationship } from '@eten-lab/models';
+
 import { BallotEntries } from './entities/BallotEntries';
 import { Elections } from './entities/Elections';
-import { NodePropertyKey } from './entities/NodePropertyKey';
-import { NodePropertyValue } from './entities/NodePropertyValue';
-import { NodeType } from './entities/NodeType';
-import { Node } from './entities/Node';
-import { Posts } from './entities/Posts';
-import { RelationshipPropertyKey } from './entities/RelationshipPropertyKey';
-import { RelationshipPropertyValue } from './entities/RelationshipPropertyValue';
-import { RelationshipType } from './entities/RelationshipType';
-import { Relationship } from './entities/Relationship';
 import { Votables } from './entities/Votables';
 import { Votes } from './entities/Votes';
-import { Users } from './entities/Users';
 import { Avatars } from './entities/Avatars';
 import { AvatarsHistory } from './entities/AvatarsHistory';
 import { EmailTokens } from './entities/EmailTokens';
 import { ResetTokens } from './entities/ResetTokens';
 import { Tokens } from './entities/Tokens';
 import { WebsocketSessions } from './entities/WebsocketSessions';
-import { RelationshipPostFile } from './entities/RelationshipPostFile';
-import { Files } from './entities/Files';
 
 export const entities = [
-  Discussions,
-  Reactions,
+  Discussion,
+  Post,
+  Reaction,
   BallotEntries,
   Elections,
   NodePropertyKey,
   NodePropertyValue,
   NodeType,
   Node,
-  Posts,
   RelationshipPropertyKey,
   RelationshipPropertyValue,
   RelationshipType,
   Relationship,
   Votables,
   Votes,
-  Users,
+  User,
   Avatars,
   AvatarsHistory,
   EmailTokens,
@@ -56,25 +59,25 @@ export const entities = [
   Tokens,
   WebsocketSessions,
   RelationshipPostFile,
-  Files,
+  File,
 ];
 
 export {
-  Discussions,
-  Reactions,
+  Discussion,
+  Reaction,
   BallotEntries,
   Elections,
   NodePropertyKey,
   NodePropertyValue,
   NodeType,
   Node,
-  Posts,
+  Post,
   RelationshipPropertyKey,
   RelationshipPropertyValue,
   RelationshipType,
   Relationship,
   Votes,
-  Users,
+  User,
   Avatars,
   AvatarsHistory,
   EmailTokens,
@@ -82,7 +85,7 @@ export {
   Tokens,
   WebsocketSessions,
   RelationshipPostFile,
-  Files,
+  File,
   Votables,
 };
 

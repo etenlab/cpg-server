@@ -1,5 +1,11 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { Users } from './Users';
+import {
+  Column,
+  Entity,
+  Index,
+  // JoinColumn,
+  // ManyToOne
+} from 'typeorm';
+// import { User } from '../entities';
 
 @Index('avatars_pkey', ['avatar', 'userId'], { unique: true })
 @Index('avatars_avatar_key', ['avatar'], { unique: true })
@@ -20,7 +26,8 @@ export class Avatars {
   })
   createdAt: Date;
 
-  @ManyToOne(() => Users, (users) => users.avatars)
-  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-  user: Users;
+  // comented out when harmonizing entities with crowd.bible
+  // @ManyToOne(() => User, (users) => users.avatars)
+  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  // user: User;
 }

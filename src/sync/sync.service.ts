@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
+import { DEFAULT_SCHEMA, TableNameConst } from '../constants';
+import { ConfigService } from '@nestjs/config';
 
 type SyncTableConfig = {
   localTableName: string;
   remoteTableName: string;
   localPK: string;
+  schema: string;
   columns: {
     local: string;
     // Missing note tyoe means it equels to `local`
@@ -30,128 +33,148 @@ function jsonToText(value: string | null) {
 }
 
 // Make sure to have correct order of tables to satisfy foreign key constraints
-const tableConfig: SyncTableConfig[] = [
-  {
-    localTableName: 'node_types',
-    remoteTableName: 'node_types',
-    localPK: 'type_name',
-    columns: [
-      {
-        local: 'type_name',
-      },
-    ],
-  },
-  {
-    localTableName: 'nodes',
-    remoteTableName: 'nodes',
-    localPK: 'id',
-    columns: [
-      {
-        local: 'id',
-      },
-      {
-        local: 'node_type',
-      },
-    ],
-  },
-  {
-    localTableName: 'node_property_keys',
-    remoteTableName: 'node_property_keys',
-    localPK: 'id',
-    columns: [
-      {
-        local: 'id',
-      },
-      {
-        local: 'node_id',
-      },
-      {
-        local: 'property_key',
-      },
-    ],
-  },
-  {
-    localTableName: 'node_property_values',
-    remoteTableName: 'node_property_values',
-    localPK: 'id',
-    columns: [
-      {
-        local: 'id',
-      },
-      {
-        local: 'node_property_key_id',
-      },
-      {
-        local: 'property_value',
-        convertToLocal: textToJson,
-        convertToRemote: jsonToText,
-      },
-    ],
-  },
-  {
-    localTableName: 'relationship_types',
-    remoteTableName: 'relationship_types',
-    localPK: 'type_name',
-    columns: [
-      {
-        local: 'type_name',
-      },
-    ],
-  },
-  {
-    localTableName: 'relationships',
-    remoteTableName: 'relationships',
-    localPK: 'id',
-    columns: [
-      {
-        local: 'id',
-      },
-      {
-        local: 'relationship_type',
-      },
-      {
-        local: 'from_node_id',
-      },
-      {
-        local: 'to_node_id',
-      },
-    ],
-  },
-  {
-    localTableName: 'relationship_property_keys',
-    remoteTableName: 'relationship_property_keys',
-    localPK: 'id',
-    columns: [
-      {
-        local: 'id',
-      },
-      {
-        local: 'relationship_id',
-      },
-      {
-        local: 'property_key',
-      },
-    ],
-  },
-  {
-    localTableName: 'relationship_property_values',
-    remoteTableName: 'relationship_property_values',
-    localPK: 'id',
-    columns: [
-      {
-        local: 'id',
-      },
-      {
-        local: 'relationship_property_key_id',
-      },
-      {
-        local: 'property_value',
-        convertToLocal: textToJson,
-        convertToRemote: jsonToText,
-      },
-    ],
-  },
-];
+const tableConfigFactory = (
+  configService: ConfigService,
+): SyncTableConfig[] => {
+  return [
+    {
+      localTableName: TableNameConst.NODE_TYPES,
+      remoteTableName: TableNameConst.NODE_TYPES,
+      localPK: 'type_name',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
+      columns: [
+        { local: 'updated_at' },
+        {
+          local: 'type_name',
+        },
+      ],
+    },
+    {
+      localTableName: 'nodes',
+      remoteTableName: 'nodes',
+      localPK: 'id',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
+      columns: [
+        { local: 'updated_at' },
+        {
+          local: 'id',
+        },
+        {
+          local: 'node_type',
+        },
+      ],
+    },
+    {
+      localTableName: TableNameConst.NODE_PROPERTY_KEYS,
+      remoteTableName: TableNameConst.NODE_PROPERTY_KEYS,
+      localPK: 'id',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
+      columns: [
+        { local: 'updated_at' },
+        {
+          local: 'id',
+        },
+        {
+          local: 'node_id',
+        },
+        {
+          local: 'property_key',
+        },
+      ],
+    },
+    {
+      localTableName: TableNameConst.NODE_PROPERTY_VALUES,
+      remoteTableName: TableNameConst.NODE_PROPERTY_VALUES,
+      localPK: 'id',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
+      columns: [
+        { local: 'updated_at' },
+        {
+          local: 'id',
+        },
+        {
+          local: 'node_property_key_id',
+        },
+        {
+          local: 'property_value',
+          convertToLocal: textToJson,
+          convertToRemote: jsonToText,
+        },
+      ],
+    },
+    {
+      localTableName: TableNameConst.RELATIONSHIP_TYPES,
+      remoteTableName: TableNameConst.RELATIONSHIP_TYPES,
+      localPK: 'type_name',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
+      columns: [
+        { local: 'updated_at' },
+        {
+          local: 'type_name',
+        },
+      ],
+    },
+    {
+      localTableName: TableNameConst.RELATIONSHIPS,
+      remoteTableName: TableNameConst.RELATIONSHIPS,
+      localPK: 'id',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
+      columns: [
+        { local: 'updated_at' },
+        {
+          local: 'id',
+        },
+        {
+          local: 'relationship_type',
+        },
+        {
+          local: 'from_node_id',
+        },
+        {
+          local: 'to_node_id',
+        },
+      ],
+    },
+    {
+      localTableName: TableNameConst.RELATIONSHIP_PROPERTY_KEYS,
+      remoteTableName: TableNameConst.RELATIONSHIP_PROPERTY_KEYS,
+      localPK: 'id',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
+      columns: [
+        { local: 'updated_at' },
+        {
+          local: 'id',
+        },
+        {
+          local: 'relationship_id',
+        },
+        {
+          local: 'property_key',
+        },
+      ],
+    },
+    {
+      localTableName: TableNameConst.RELATIONSHIP_PROPERTY_VALUES,
+      remoteTableName: TableNameConst.RELATIONSHIP_PROPERTY_VALUES,
+      localPK: 'id',
+      schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
+      columns: [
+        { local: 'updated_at' },
+        {
+          local: 'id',
+        },
+        {
+          local: 'relationship_property_key_id',
+        },
+        {
+          local: 'property_value',
+          convertToLocal: textToJson,
+          convertToRemote: jsonToText,
+        },
+      ],
+    },
+  ];
+};
 
 export type TableSyncSchema = {
   pkField: string;
@@ -166,17 +189,21 @@ export type SyncPayloadEntry = {
 
 @Injectable()
 export class SyncService {
+  private tableConfig: SyncTableConfig[];
   constructor(
     @InjectEntityManager()
     private readonly em: EntityManager,
-  ) {}
+    private readonly configService: ConfigService,
+  ) {
+    this.tableConfig = tableConfigFactory(configService);
+  }
 
   async syncFromClient(entries: SyncPayloadEntry[]) {
     const sortedEntries = entries.sort((a, b) => {
-      const aIndex = tableConfig.findIndex(
+      const aIndex = this.tableConfig.findIndex(
         (cfg) => cfg.remoteTableName === a.table,
       );
-      const bIndex = tableConfig.findIndex(
+      const bIndex = this.tableConfig.findIndex(
         (cfg) => cfg.remoteTableName === b.table,
       );
 
@@ -184,14 +211,14 @@ export class SyncService {
     });
 
     for (const entry of sortedEntries) {
-      if (!entry.rows.length) {
+      if (!entry?.rows?.length) {
         continue;
       }
 
       await this.em.transaction(async (em) => {
         const remoteTableName = entry.table;
 
-        const config = Object.values(tableConfig).find(
+        const config = Object.values(this.tableConfig).find(
           (config) => config.remoteTableName === remoteTableName,
         );
 
@@ -199,7 +226,7 @@ export class SyncService {
           throw new Error(`Cannot find config for table ${entry.table}`);
         }
 
-        const { localTableName, localPK, columns } = config;
+        const { localTableName, localPK, columns, schema } = config;
         const localRows = [] as any[];
 
         for (const row of entry.rows) {
@@ -215,7 +242,7 @@ export class SyncService {
               }
             } else {
               console.error(
-                `Cannot find column for key ${key} in table ${entry.table}`,
+                `Cannot find column for key ${key} in the config of table ${entry.table}`,
               );
             }
 
@@ -241,8 +268,12 @@ export class SyncService {
           });
 
         const [query, params] = sql.getQueryAndParameters();
+        const qr = query.replace(
+          tablePlaceholder,
+          `${schema}"."${localTableName}`,
+        );
 
-        await em.query(query.replace(tablePlaceholder, localTableName), params);
+        await em.query(qr, params);
       });
     }
   }
@@ -250,18 +281,18 @@ export class SyncService {
   async syncToClient(lastSyncDate: Date | null): Promise<SyncPayloadEntry[]> {
     const result = [] as SyncPayloadEntry[];
 
-    for (const config of tableConfig) {
-      const { localTableName, columns, remoteTableName } = config;
+    for (const config of this.tableConfig) {
+      const { localTableName, columns, remoteTableName, schema } = config;
 
       let rows: any[] = [];
 
       if (lastSyncDate) {
         rows = await this.em.query(
-          `SELECT * FROM ${localTableName} WHERE updated_at > $1`,
+          `SELECT * FROM ${schema}.${localTableName} WHERE updated_at > $1`,
           [lastSyncDate],
         );
       } else {
-        rows = await this.em.query(`SELECT * FROM ${localTableName}`);
+        rows = await this.em.query(`SELECT * FROM ${schema}.${localTableName}`);
       }
 
       const remoteRows = rows.map((row: any) => {
