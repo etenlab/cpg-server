@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '../model/entities';
+import { Users } from '../model/entities/Users';
 import { ResetTokens } from 'src/model/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,8 +9,8 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    @InjectRepository(Users)
+    private usersRepository: Repository<Users>,
     @InjectRepository(ResetTokens)
     private tokensRepository: Repository<ResetTokens>,
     private ses: SesManagerService,

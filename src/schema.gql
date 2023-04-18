@@ -7,11 +7,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type FileDecoratorsGQL {
-  fileName: String!
-  fileSize: Int!
-  fileType: String!
-  fileUrl: String!
+type Files {
+  file_name: String!
+  file_size: Int!
+  file_type: String!
+  file_url: String!
   id: Int!
 }
 
@@ -19,12 +19,12 @@ type Mutation {
   forgotPassword(email: String!): ResetTokens!
   resetUserPassword(password: String!, token: String!): Boolean!
   updatePassword(password: String!, token: String!): Boolean!
-  uploadFile(file: Upload!, file_size: Int!, file_type: String!): FileDecoratorsGQL!
+  uploadFile(file: Upload!, file_size: Int!, file_type: String!): Files!
 }
 
 type Query {
-  file(id: Int!): FileDecoratorsGQL!
-  fileList: [FileDecoratorsGQL!]!
+  file(id: Int!): Files!
+  fileList: [Files!]!
   isTokenValid(token: String!): ResetTokens!
 }
 

@@ -2,11 +2,11 @@ import {
   Column,
   Entity,
   Index,
-  // JoinColumn,
-  // ManyToOne,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-// import { User } from '../entities';
+import { Users } from './Users';
 
 @Index('avatars_history_pkey', ['avatarHistoryId'], { unique: true })
 @Entity('avatars_history', { schema: 'admin' })
@@ -29,8 +29,7 @@ export class AvatarsHistory {
   })
   changedAt: Date;
 
-  // comented out when harmonizing entities with crowd.bible
-  // @ManyToOne(() => User, (users) => users.avatarsHistories)
-  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-  // user: User;
+  @ManyToOne(() => Users, (users) => users.avatarsHistories)
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  user: Users;
 }

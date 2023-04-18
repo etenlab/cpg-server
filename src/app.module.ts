@@ -27,7 +27,6 @@ import { FileModule } from './file/file.module';
 
 import entities from './model/entities';
 import { UsersModule } from './users/users.module';
-import { DEFAULT_SCHEMA } from './constants';
 
 @Module({
   imports: [
@@ -59,7 +58,7 @@ import { DEFAULT_SCHEMA } from './constants';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        schema: configService.get('DB_SCHEMA') || DEFAULT_SCHEMA,
+        schema: configService.get('DB_SCHEMA') || 'public',
         entities,
         synchronize: false,
         logging: true,

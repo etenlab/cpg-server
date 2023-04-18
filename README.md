@@ -22,11 +22,6 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-#
-TODO:
-1. make rename methods of entities form snake_case to camelCase- make conventions the same with crowd.bible
-2. remove strange duplicationg xxxx_id fields from entities
-3. get rid of different places of definig the schema - much better move to migrations pattern
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.

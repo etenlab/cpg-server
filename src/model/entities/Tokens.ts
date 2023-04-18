@@ -2,11 +2,11 @@ import {
   Column,
   Entity,
   Index,
-  // JoinColumn,
-  // ManyToOne,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-// import { User } from '../entities';
+import { Users } from './Users';
 
 @Index('tokens_token_idx', ['token'], {})
 @Index('tokens_user_id_token_idx', ['token', 'userId'], {})
@@ -28,8 +28,7 @@ export class Tokens {
   @Column('text', { name: 'token', nullable: true })
   token: string | null;
 
-  // comented out when harmonizing entities with crowd.bible
-  // @ManyToOne(() => User, (users) => users.tokens)
-  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-  // user: User;
+  @ManyToOne(() => Users, (users) => users.tokens)
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  user: Users;
 }

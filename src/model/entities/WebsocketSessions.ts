@@ -1,11 +1,5 @@
-import {
-  Column,
-  Entity,
-  Index,
-  // JoinColumn,
-  // ManyToOne
-} from 'typeorm';
-// import { Users } from './Users';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import { Users } from './Users';
 
 @Index('websocket_sessions_user_id_idx', ['userId'], {})
 @Index('websocket_sessions_pkey', ['websocketSessionId'], { unique: true })
@@ -30,8 +24,7 @@ export class WebsocketSessions {
   @Column('text', { name: 'token' })
   token: string;
 
-  // comented out when harmonizing entities with crowd.bible
-  // @ManyToOne(() => Users, (users) => users.websocketSessions)
-  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-  // user: Users;
+  @ManyToOne(() => Users, (users) => users.websocketSessions)
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  user: Users;
 }

@@ -1,78 +1,69 @@
-SET search_path TO admin;
-CREATE TABLE IF NOT EXISTS node_types (
+CREATE TABLE IF NOT EXISTS node_type (
     type_name varchar(32) PRIMARY KEY,
-    updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-    sync_layer bigint
+    updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS nodes (
+CREATE TABLE IF NOT EXISTS node (
     id varchar(21) PRIMARY KEY,
-    node_type varchar(32) REFERENCES node_types(type_name),
-    updated_at timestamp NULL,
-    sync_layer bigint
+    node_type varchar(32) REFERENCES node_type(type_name),
+    updated_at timestamp NULL
 );
 
-CREATE TABLE IF NOT EXISTS node_property_keys (
+CREATE TABLE IF NOT EXISTS node_property_key (
     id varchar(21) PRIMARY KEY,
-    node_id varchar(21) REFERENCES nodes(id) NOT NULL,
+    node_id varchar(21) REFERENCES node(id) NOT NULL,
     property_key varchar(64),
-    updated_at timestamp NULL,
-    sync_layer bigint
+    updated_at timestamp NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_node_property_key_node_id_key ON node_property_keys (id);
+CREATE INDEX IF NOT EXISTS idx_node_property_key_node_id_key ON node_property_key (id);
 
-CREATE TABLE IF NOT EXISTS node_property_values (
+CREATE TABLE IF NOT EXISTS node_property_value (
     id varchar(21) PRIMARY KEY,
-    node_property_key_id varchar(21) REFERENCES node_property_keys(id) NOT NULL,
+    node_property_key_id varchar(21) REFERENCES node_property_key(id) NOT NULL,
     property_value jsonb,
-    updated_at timestamp NULL,
-    sync_layer bigint
+    updated_at timestamp NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_node_property_value_key_id ON node_property_values (id);
+CREATE INDEX IF NOT EXISTS idx_node_property_value_key_id ON node_property_value (id);
 
-CREATE TABLE IF NOT EXISTS relationship_types (
+CREATE TABLE IF NOT EXISTS relationship_type (
     type_name varchar(32) PRIMARY KEY,
-    updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-    sync_layer bigint
+    updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS relationships (
+CREATE TABLE IF NOT EXISTS relationship (
     id varchar(21) PRIMARY KEY,
-    relationship_type varchar(32) REFERENCES relationship_types(type_name),
-    from_node_id varchar(21) REFERENCES nodes(id),
-    to_node_id varchar(21) REFERENCES nodes(id),
-    updated_at timestamp NULL,
-    sync_layer bigint
+    relationship_type varchar(32) REFERENCES relationship_type(type_name),
+    from_node_id varchar(21) REFERENCES node(id),
+    to_node_id varchar(21) REFERENCES node(id),
+    updated_at timestamp NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_relationship_from_node_id ON relationships (id);
+CREATE INDEX IF NOT EXISTS idx_relationship_from_node_id ON relationship (id);
 
-CREATE INDEX IF NOT EXISTS idx_relationship_to_node_id ON relationships (id);
+CREATE INDEX IF NOT EXISTS idx_relationship_to_node_id ON relationship (id);
 
-CREATE TABLE IF NOT EXISTS relationship_property_keys (
+CREATE TABLE IF NOT EXISTS relationship_property_key (
     id varchar(21) PRIMARY KEY,
-    relationship_id varchar(21) REFERENCES relationships(id) NOT NULL,
+    relationship_id varchar(21) REFERENCES relationship(id) NOT NULL,
     property_key varchar(64),
-    updated_at timestamp NULL,
-    sync_layer bigint
+    updated_at timestamp NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_relationship_property_key_relationship_id ON relationship_property_keys (id);
+CREATE INDEX IF NOT EXISTS idx_relationship_property_key_relationship_id ON relationship_property_key (id);
 
-CREATE TABLE IF NOT EXISTS relationship_property_values (
+CREATE TABLE IF NOT EXISTS relationship_property_value (
     id varchar(21) PRIMARY KEY,
-    relationship_property_key_id varchar(21) REFERENCES relationship_property_keys(id) NOT NULL,
+    relationship_property_key_id varchar(21) REFERENCES relationship_property_key(id) NOT NULL,
     property_value jsonb,
-    updated_at timestamp NULL,
-    sync_layer bigint
+    updated_at timestamp NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_relationship_property_value_key_id ON relationship_property_values (id);
+CREATE INDEX IF NOT EXISTS idx_relationship_property_value_key_id ON relationship_property_value (id);
 
 INSERT INTO
-    node_types (type_name)
+    node_type (type_name)
 VALUES
     ('word'),
     ('addition'),
@@ -90,7 +81,7 @@ VALUES
     ('strongs-entry') ON CONFLICT DO NOTHING;
 
 INSERT INTO
-    relationship_types (type_name)
+    relationship_type (type_name)
 VALUES
     ('word-sequence-to-word'),
     ('verse-to-word-sequence'),

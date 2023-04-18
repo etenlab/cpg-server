@@ -1,12 +1,12 @@
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { User, ResetTokens } from 'src/model/entities';
+import { Users, ResetTokens } from 'src/model/entities';
 import axios from 'axios';
 import * as querystring from 'qs';
 import { NotFoundError } from 'rxjs';
 import { decodeToken, isTokenValid } from 'src/utils/AuthUtils';
 
-@Resolver(() => User)
+@Resolver(() => Users)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 

@@ -11,6 +11,8 @@ import {
   RelationshipPropertyValue,
   RelationshipType,
 } from '../model/entities';
+import { NodeTypeName } from '../model/entities/NodeType';
+import { RelationshipTypeName } from '../model/entities/RelationshipType';
 
 @Injectable()
 export class SeedService {
@@ -36,52 +38,52 @@ export class SeedService {
 
   async makeGraphEntities() {
     const nodeType1 = this.nodeTypeRepo.create({
-      type_name: Math.random().toString(36).substring(2, 10),
+      name: Math.random()
+        .toString(36)
+        .substring(2, 10) as unknown as NodeTypeName,
     });
     const nodeType2 = this.nodeTypeRepo.create({
-      type_name: Math.random().toString(36).substring(2, 10),
+      name: Math.random()
+        .toString(36)
+        .substring(2, 10) as unknown as NodeTypeName,
     });
     const node1 = this.nodeRepo.create({
-      nodeType: nodeType1,
+      typeName: nodeType1.name as unknown as NodeTypeName,
     });
     const node2 = this.nodeRepo.create({
-      nodeType: nodeType2,
+      typeName: nodeType2.name as unknown as NodeTypeName,
     });
 
     const relationshipType = this.relationshipTypeRepo.create({
-      type_name: Math.random().toString(36).substring(2, 10),
+      name: Math.random()
+        .toString(36)
+        .substring(2, 10) as unknown as RelationshipTypeName,
     });
 
     const relationship = this.relationshipRepo.create({
-      relationshipType,
+      typeName: relationshipType.name as unknown as RelationshipTypeName,
       fromNode: node1,
       toNode: node2,
     });
 
     const nodePropKey = this.nodePropertyKeysRepo.create({
-      property_key: 'some_key' + Math.random().toString(36).substring(2, 10),
+      key: Math.random().toString(36).substring(2, 10),
       node: node1,
     });
 
     const nodePropValue = this.nodePropertyValuesRepo.create({
-      propertyKey: nodePropKey,
-      property_value: JSON.stringify({
-        value:
-          'some_node_prop_value' + Math.random().toString(36).substring(2, 10),
-      }),
+      nodePropertyKey: nodePropKey,
+      value: { value: Math.random().toString(36).substring(2, 10) },
     });
 
     const relPropKey = this.relationshipPropertyKeyRepo.create({
-      property_key: Math.random().toString(36).substring(2, 10),
+      propertyKey: Math.random().toString(36).substring(2, 10),
       relationship: relationship,
     });
 
     const relPropValue = this.relationshipPropertyValuesRepo.create({
       propertyKey: relPropKey,
-      property_value: JSON.stringify({
-        value:
-          'some_rel_prop_value' + Math.random().toString(36).substring(2, 10),
-      }),
+      value: { value: Math.random().toString(36).substring(2, 10) },
     });
 
     await this.nodeTypeRepo.save(nodeType1);

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { File } from '../model/entities';
+import { Files } from '../model/entities/Files';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { S3Client } from '@aws-sdk/client-s3';
@@ -12,22 +12,22 @@ dotenv.config();
 @Injectable()
 export class FileService {
   constructor(
-    @InjectRepository(File)
-    private fileRepository: Repository<File>,
+    @InjectRepository(Files)
+    private fileRepository: Repository<Files>,
   ) {}
 
   async uploadFile(
     readStream: ReadStream,
-    fileName: string,
-    fileType: string,
-    fileSize: number,
-  ): Promise<File> {
+    file_name: string,
+    file_type: string,
+    file_size: number,
+  ): Promise<Files> {
     try {
       const accessKeyId = process.env.AWS_S3_ACCESS_ID;
       const secretAccessKey = process.env.AWS_S3_SECRET_KEY;
       const bucketName = process.env.AWS_S3_BUCKET_NAME;
       const region = process.env.AWS_S3_REGION;
-      const fileKey = `${nanoid()}-${fileName}`;
+      const fileKey = `${nanoid()}-${file_name}`;
 
       const s3Client = new S3Client({
         region,
@@ -54,10 +54,10 @@ export class FileService {
       await parallelUploads3.done();
 
       const file = this.fileRepository.create({
-        fileName,
-        fileType,
-        fileSize,
-        fileUrl: `https://${bucketName}.s3.${region}.amazonaws.com/${fileKey}`,
+        file_name,
+        file_type,
+        file_size,
+        file_url: `https://${bucketName}.s3.${region}.amazonaws.com/${fileKey}`,
       });
 
       return await this.fileRepository.save(file);

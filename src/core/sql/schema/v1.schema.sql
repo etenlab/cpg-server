@@ -197,14 +197,12 @@ create table admin.site_text_translations(
 create table admin.node_types (
   type_name varchar(32) primary key,
   updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
 );
 
 create table admin.nodes (
   id varchar(21) primary key,
   node_type varchar(32) references admin.node_types(type_name),
-  updated_at timestamp null default CURRENT_TIMESTAMP,
-  sync_layer bigint,
+  updated_at timestamp null default CURRENT_TIMESTAMP
 );
 
 create table admin.node_property_keys (
@@ -212,7 +210,6 @@ create table admin.node_property_keys (
   node_id varchar(21) references admin.nodes(id) not null,
   property_key varchar(64) not null,
   updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
 );
 
 create index idx_node_property_keys_node_id_key on admin.node_property_keys (node_id);
@@ -222,7 +219,6 @@ create table admin.node_property_values (
   property_value jsonb null,
   node_property_key_id varchar(21) references admin.node_property_keys(id) not null,
   updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
 );
 
 create index idx_node_property_values_key_id on admin.node_property_values (node_property_key_id);
@@ -230,7 +226,6 @@ create index idx_node_property_values_key_id on admin.node_property_values (node
 create table admin.relationship_types (
   type_name varchar(32) primary key,
   updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
 );
 
 create table admin.relationships (
@@ -239,7 +234,6 @@ create table admin.relationships (
   from_node_id varchar(21) references admin.nodes(id),
   to_node_id varchar(21) references admin.nodes(id),
   updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
 );
 
 create index idx_relationships_from_node_id on admin.relationships (from_node_id);
@@ -250,7 +244,6 @@ create table admin.relationship_property_keys (
   property_key varchar(64) not null,
   relationship_id varchar(21) references admin.relationships(id) not null,
   updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
 );
 
 create index idx_relationship_property_keys_relationship_id on admin.relationship_property_keys (relationship_id);
@@ -260,7 +253,6 @@ create table admin.relationship_property_values (
   property_value jsonb null,
   property_key_id varchar(21) references admin.relationship_property_keys(id) not null,
   updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
 );
 
 create index idx_relationship_property_values_key_id on admin.relationship_property_values (property_key_id);
@@ -428,14 +420,6 @@ create table admin.notifications (
   created_at timestamp default current_timestamp
 );
 
--- DATASETS ---------------------------------------------------------
--- DATASETS ---------------------------------------------------------
--- DATASETS ---------------------------------------------------------
--- DATASETS ---------------------------------------------------------
--- DATASETS ---------------------------------------------------------
--- DATASETS ---------------------------------------------------------
--- DATASETS ---------------------------------------------------------
--- DATASETS ---------------------------------------------------------
 -- DATASETS ---------------------------------------------------------
 
 SET search_path TO public;
