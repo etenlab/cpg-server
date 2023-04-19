@@ -112,3 +112,21 @@ VALUES
     ('paragraph-to-verse'),
     ('verse-to-sentence'),
     ('sentence-to-word') ON CONFLICT DO NOTHING;
+
+ALTER TABLE IF EXISTS "admin".node_property_value RENAME TO node_property_values;
+ALTER TABLE IF EXISTS "admin".node_property_key RENAME TO node_property_keys;
+ALTER TABLE IF EXISTS "admin".node_type RENAME TO node_types;
+ALTER TABLE IF EXISTS "admin".node RENAME TO nodes;
+ALTER TABLE IF EXISTS "admin".relationship_property_key RENAME TO relationship_property_keys;
+ALTER TABLE IF EXISTS "admin".relationship_property_value RENAME TO relationship_property_values;
+ALTER TABLE IF EXISTS "admin".relationship_type RENAME TO relationship_types;
+ALTER TABLE IF EXISTS "admin".relationship RENAME TO relationships;
+
+ALTER TABLE "admin".node_property_values ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
+ALTER TABLE "admin".node_property_keys ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
+ALTER TABLE "admin".node_types ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
+ALTER TABLE "admin".nodes ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
+ALTER TABLE "admin".relationship_property_keys ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
+ALTER TABLE "admin".relationship_property_values ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
+ALTER TABLE "admin".relationship_types ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
+ALTER TABLE "admin".relationships ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
