@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
-import { readFile } from 'fs/promises';
-import { resolve } from 'path';
 import { EntityManager } from 'typeorm';
 
 @Injectable()
