@@ -19,7 +19,6 @@ import { SeedController } from './seed/seed.controller';
 
 import { AppService } from './app.service';
 import { SyncService } from './sync/sync.service';
-import { MigrationService } from './migration/migration.service';
 import { SeedService } from './seed/seed.service';
 
 import { CoreModule } from './core/core.module';
@@ -74,14 +73,7 @@ import { DEFAULT_SCHEMA } from './constants';
     UsersModule,
   ],
   controllers: [AppController, SyncController, SeedController],
-  providers: [
-    AppService,
-    SyncService,
-    MigrationService,
-    SeedService,
-    SesManagerService,
-  ],
-  // entities: [ProgressBibleLanguageDetail],
+  providers: [AppService, SyncService, SeedService, SesManagerService],
   exports: [],
 })
 export class AppModule {
