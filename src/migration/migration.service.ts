@@ -19,12 +19,6 @@ export class MigrationService {
   }
 
   async migrate() {
-    const migrationFile = await readFile(
-      resolve(process.cwd(), 'src/schema.sql'),
-    );
-
-    await this.em.query(migrationFile.toString());
-
-    console.log(`Migration completed!`);
+    // placeholder for a migration system
   }
 }

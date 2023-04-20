@@ -7,7 +7,7 @@
  * npx typeorm-model-generator -h postgres -d eil -u postgres -x example -e postgres -o ./src/model
  */
 
-import { Discussion } from '@eten-lab/models';
+import { Candidate, Discussion } from '@eten-lab/models';
 import { Post } from '@eten-lab/models';
 import { User } from '@eten-lab/models';
 import { Reaction } from '@eten-lab/models';
@@ -23,11 +23,9 @@ import { RelationshipPropertyKey } from '@eten-lab/models';
 import { RelationshipPropertyValue } from '@eten-lab/models';
 import { RelationshipType } from '@eten-lab/models';
 import { Relationship } from '@eten-lab/models';
+import { Vote } from '@eten-lab/models';
+import { Election, ElectionType } from '@eten-lab/models';
 
-import { BallotEntries } from './entities/BallotEntries';
-import { Elections } from './entities/Elections';
-import { Votables } from './entities/Votables';
-import { Votes } from './entities/Votes';
 import { Avatars } from './entities/Avatars';
 import { AvatarsHistory } from './entities/AvatarsHistory';
 import { EmailTokens } from './entities/EmailTokens';
@@ -39,8 +37,8 @@ export const entities = [
   Discussion,
   Post,
   Reaction,
-  BallotEntries,
-  Elections,
+  Election,
+  ElectionType,
   NodePropertyKey,
   NodePropertyValue,
   NodeType,
@@ -49,8 +47,8 @@ export const entities = [
   RelationshipPropertyValue,
   RelationshipType,
   Relationship,
-  Votables,
-  Votes,
+  Candidate,
+  Vote,
   User,
   Avatars,
   AvatarsHistory,
@@ -65,8 +63,8 @@ export const entities = [
 export {
   Discussion,
   Reaction,
-  BallotEntries,
-  Elections,
+  Election,
+  ElectionType,
   NodePropertyKey,
   NodePropertyValue,
   NodeType,
@@ -76,7 +74,8 @@ export {
   RelationshipPropertyValue,
   RelationshipType,
   Relationship,
-  Votes,
+  Candidate,
+  Vote,
   User,
   Avatars,
   AvatarsHistory,
@@ -86,7 +85,6 @@ export {
   WebsocketSessions,
   RelationshipPostFile,
   File,
-  Votables,
 };
 
 export default entities;

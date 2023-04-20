@@ -2,38 +2,38 @@ import { Column, Entity } from 'typeorm';
 
 @Entity('typeorm_metadata', { schema: 'public' })
 export class TypeormMetadata {
-  @Column('character varying', { name: 'type', length: 255 })
+  @Column('varchar', { name: 'type', length: 255 })
   type!: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'database',
     nullable: true,
     length: 255,
-    default: () => 'NULL::character varying',
+    default: () => 'NULL::varchar',
   })
   database!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'schema',
     nullable: true,
     length: 255,
-    default: () => 'NULL::character varying',
+    default: () => 'NULL::varchar',
   })
   schema!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'table',
     nullable: true,
     length: 255,
-    default: () => 'NULL::character varying',
+    default: () => 'NULL::varchar',
   })
   table!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'name',
     nullable: true,
     length: 255,
-    default: () => 'NULL::character varying',
+    default: () => 'NULL::varchar',
   })
   name!: string | null;
 

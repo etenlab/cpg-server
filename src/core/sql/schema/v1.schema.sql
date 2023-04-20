@@ -2,6 +2,7 @@
 -- can only be run after the bootstrap.sql file is run manually to setup the db
 
 create schema admin;
+SET search_path TO admin;
 
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
@@ -39,7 +40,7 @@ create table database_version_control (
 
 -- AUTHENTICATION ---------------------------------------------------
 
-create table admin.users (
+create table admin.users_internal (
   user_id bigserial primary key,
   active bool not null default true,
   email varchar(255) unique not null,
@@ -50,10 +51,10 @@ create table admin.users (
 );
 
 -- make room for manually created service accounts
-alter sequence admin.users_user_id_seq restart with 100; 
+alter sequence admin.users_internal_user_id_seq restart with 100; 
 
 create table admin.avatars(
-  user_id bigint not null references admin.users(user_id),
+  user_id bigint not null references admin.users_internal(user_id),
   avatar varchar(64) unique not null,
   url varchar(128),
   created_at timestamp not null default current_timestamp,
@@ -62,7 +63,7 @@ create table admin.avatars(
 
 create table admin.avatars_history(
   avatar_history_id bigserial primary key,
-  user_id bigint not null references admin.users(user_id),
+  user_id bigint not null references admin.users_internal(user_id),
   avatar varchar(64) not null,
   url varchar(128),
   created_at timestamp not null,
@@ -76,7 +77,7 @@ create type admin.token_type as enum (
 
 create table admin.tokens (
   token_id bigserial primary key,
-  user_id bigint references admin.users(user_id),
+  user_id bigint references admin.users_internal(user_id),
   created_at timestamp not null default current_timestamp,
   token text
 );
@@ -86,7 +87,7 @@ create index on admin.tokens(user_id, token);
 
 create table admin.email_tokens(
   token varchar(64) primary key,
-  user_id bigint not null references admin.users(user_id),
+  user_id bigint not null references admin.users_internal(user_id),
   type admin.token_type not null,
   created_at timestamp not null default current_timestamp
 );
@@ -99,7 +100,7 @@ create table admin.reset_tokens(
 
 create table admin.websocket_sessions (
   websocket_session_id varchar(64) not null primary key,
-  user_id bigint references admin.users(user_id),
+  user_id bigint references admin.users_internal(user_id),
   created_at timestamp not null default current_timestamp,
   token text not null -- one to many
 );
@@ -161,7 +162,7 @@ create type admin.language_skill_enum as enum (
   '5'
 );
 
--- create table admin.language_skills (
+create table admin.language_skills (
   id bigserial primary key,
   user_id varchar(512) not null, -- prolly will change, not sure how we will reference users yet
   language_table varchar(64) not null,
@@ -201,7 +202,7 @@ create table admin.site_text_translations(
 -- NOTIFICATIONS ----------------------------------------------------
 create table admin.notifications (
   id bigserial primary key,
-  user_id bigint not null references admin.users(user_id),
+  user_id bigint not null references admin.users_internal(user_id),
   table_name varchar(64) not null,
   row bigint not null,
   acknowledged bool not null default false,

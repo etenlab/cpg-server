@@ -6,37 +6,37 @@ export class Iso_639_5 {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', { name: 'identifier', length: 3 })
+  @Column('varchar', { name: 'identifier', length: 3 })
   identifier!: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'english_name',
     nullable: true,
     length: 128,
   })
   englishName!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'french_name',
     nullable: true,
     length: 128,
   })
   frenchName!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'iso_639_2',
     nullable: true,
     length: 128,
   })
   iso_639_2!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'hierarchy',
     nullable: true,
     length: 128,
   })
   hierarchy!: string | null;
 
-  @Column('character varying', { name: 'notes', nullable: true, length: 128 })
+  @Column('varchar', { name: 'notes', nullable: true, length: 128 })
   notes!: string | null;
 }

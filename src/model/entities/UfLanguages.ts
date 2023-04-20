@@ -6,35 +6,35 @@ export class UfLanguages {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', { name: 'code', length: 50 })
+  @Column('varchar', { name: 'code', length: 50 })
   code!: string;
 
-  @Column('character varying', { name: 'iso_639_3', nullable: true, length: 3 })
+  @Column('varchar', { name: 'iso_639_3', nullable: true, length: 3 })
   iso_639_3!: string | null;
 
-  @Column('character varying', { name: 'name', length: 200 })
+  @Column('varchar', { name: 'name', length: 200 })
   name!: string;
 
   @Column('text', { name: 'alternate_name', nullable: true })
   alternateName!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'anglicized_name',
     nullable: true,
     length: 200,
   })
   anglicizedName!: string | null;
 
-  @Column('character varying', { name: 'country', nullable: true, length: 200 })
+  @Column('varchar', { name: 'country', nullable: true, length: 200 })
   country!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'gateway_language',
     nullable: true,
     length: 200,
   })
   gatewayLanguage!: string | null;
 
-  @Column('character varying', { name: 'gw', nullable: true, length: 200 })
+  @Column('varchar', { name: 'gw', nullable: true, length: 200 })
   gw!: string | null;
 }

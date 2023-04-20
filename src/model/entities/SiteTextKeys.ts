@@ -22,20 +22,20 @@ export class SiteTextKeys {
   @Column('bigint', { name: 'app', unique: true })
   app: string;
 
-  @Column('character varying', { name: 'language_table', length: 64 })
+  @Column('varchar', { name: 'language_table', length: 64 })
   languageTable: string;
 
   @Column('bigint', { name: 'language_id' })
   languageId: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'site_text_key',
     unique: true,
     length: 512,
   })
   siteTextKey: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'description',
     nullable: true,
     length: 512,

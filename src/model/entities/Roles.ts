@@ -20,7 +20,7 @@ export class Roles {
   @Column('bigint', { name: 'organization', unique: true })
   organization: string;
 
-  @Column('character varying', { name: 'name', unique: true, length: 64 })
+  @Column('varchar', { name: 'name', unique: true, length: 64 })
   name: string;
 
   @ManyToOne(() => Organizations, (organizations) => organizations.roles)

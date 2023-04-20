@@ -7,10 +7,10 @@ export class EmailsSent {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'email_sent_id' })
   emailSentId: string;
 
-  @Column('character varying', { name: 'email', length: 255 })
+  @Column('varchar', { name: 'email', length: 255 })
   email: string;
 
-  @Column('character varying', { name: 'message_id', length: 64 })
+  @Column('varchar', { name: 'message_id', length: 64 })
   messageId: string;
 
   @Column('enum', { name: 'type', enum: ['Register', 'PasswordReset'] })

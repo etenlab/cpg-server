@@ -6,44 +6,44 @@ export class UfAdditionalLanguages {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'ietf_tag',
     nullable: true,
     length: 200,
   })
   ietfTag!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'two_letter',
     nullable: true,
     length: 2,
   })
   twoLetter!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'three_letter',
     nullable: true,
     length: 3,
   })
   threeLetter!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'common_name',
     nullable: true,
     length: 200,
   })
   commonName!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'native_name',
     nullable: true,
     length: 200,
   })
   nativeName!: string | null;
 
-  @Column('character varying', { name: 'direction', nullable: true, length: 3 })
+  @Column('varchar', { name: 'direction', nullable: true, length: 3 })
   direction!: string | null;
 
-  @Column('character varying', { name: 'comment', nullable: true, length: 500 })
+  @Column('varchar', { name: 'comment', nullable: true, length: 500 })
   comment!: string | null;
 }

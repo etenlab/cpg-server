@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { readFileSync } from 'fs';
 import { PostgresService } from './postgres.service';
+import { log } from 'console';
 
 @Injectable()
 export class DatabaseVersionControlService {

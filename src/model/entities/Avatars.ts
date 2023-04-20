@@ -14,10 +14,10 @@ export class Avatars {
   @Column('bigint', { primary: true, name: 'user_id' })
   userId: string;
 
-  @Column('character varying', { primary: true, name: 'avatar', length: 64 })
+  @Column('varchar', { primary: true, name: 'avatar', length: 64 })
   avatar: string;
 
-  @Column('character varying', { name: 'url', nullable: true, length: 128 })
+  @Column('varchar', { name: 'url', nullable: true, length: 128 })
   url: string | null;
 
   @Column('timestamp without time zone', {

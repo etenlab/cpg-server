@@ -6,26 +6,26 @@ export class ProgressBibleLanguageDetails {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', { name: 'unit_code', length: 5 })
+  @Column('varchar', { name: 'unit_code', length: 5 })
   unitCode!: string;
 
   @Column('enum', { name: 'unit_type', enum: ['L', 'S', 'D'] })
   unitType!: 'L' | 'S' | 'D';
 
-  @Column('character varying', { name: 'unit_name', length: 200 })
+  @Column('varchar', { name: 'unit_name', length: 200 })
   unitName!: string;
 
-  @Column('character varying', { name: 'unit_full_name', length: 200 })
+  @Column('varchar', { name: 'unit_full_name', length: 200 })
   unitFullName!: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'ethnologue_name',
     nullable: true,
     length: 200,
   })
   ethnologueName!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'iso_639_3_code',
     nullable: true,
     length: 5,
@@ -41,42 +41,42 @@ export class ProgressBibleLanguageDetails {
   @Column('enum', { name: 'language_status', enum: ['Living', 'Extinct'] })
   languageStatus!: 'Living' | 'Extinct';
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'language_scope',
     nullable: true,
     length: 20,
   })
   languageScope!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'primary_continent',
     nullable: true,
     length: 200,
   })
   primaryContinent!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'primary_country_name',
     nullable: true,
     length: 200,
   })
   primaryCountryName!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'primary_country_code',
     nullable: true,
     length: 2,
   })
   primaryCountryCode!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'retirement_explanation',
     nullable: true,
     length: 500,
   })
   retirementExplanation!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'how_to_fix',
     nullable: true,
     length: 500,
