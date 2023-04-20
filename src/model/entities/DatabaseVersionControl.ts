@@ -1,7 +1,7 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Index('database_version_control_pkey', ['id'], { unique: true })
-@Entity('database_version_control', { schema: 'public' })
+@Entity('database_version_control', { schema: 'admin' })
 export class DatabaseVersionControl {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;

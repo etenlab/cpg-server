@@ -7,7 +7,7 @@ SET search_path TO admin;
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
--- GENERAL ------------------------------------------------------------
+-- GENERAL ----------------------------------------------------------
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
@@ -465,7 +465,7 @@ insert into relationship_types (type_name) values
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
-
+create schema public;
 SET search_path TO public;
 
 create type iso_639_2_entry_type as enum (
@@ -1052,25 +1052,3 @@ create table glottolog_family(
     child_languages int,
     top_level_family int
 );
-
-CREATE MATERIALIZED VIEW strongs_dictionary
-AS
-SELECT n.node_id
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'lemma' AS lemma
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'xlit' AS xlit
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'pron' AS pron
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'derivation' AS derivation
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'strongs_def' AS strongs_def
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'kjv_def' AS kjv_def
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'strongs_id' AS strongs_id
-FROM admin.nodes n
-LEFT JOIN admin.node_property_keys npk ON
-npk.node_id = n.node_id
-LEFT JOIN admin.node_property_values npv ON
-npv.node_property_key_id = npk.node_property_key_id
-WHERE n.node_type = 'strongs-entry'
-GROUP BY n.node_id
-WITH DATA;
-
-CREATE UNIQUE INDEX idx_strongs_dictionary_strongs_id
-  ON strongs_dictionary (strongs_id);
