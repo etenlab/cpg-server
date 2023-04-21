@@ -6,23 +6,23 @@ export class UfCountriesList {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', { name: 'code', nullable: true, length: 2 })
+  @Column('varchar', { name: 'code', nullable: true, length: 2 })
   code!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'alpha_3_code',
     nullable: true,
     length: 3,
   })
   alpha_3Code!: string | null;
 
-  @Column('character varying', { name: 'name', nullable: true, length: 200 })
+  @Column('varchar', { name: 'name', nullable: true, length: 200 })
   name!: string | null;
 
-  @Column('character varying', { name: 'region', nullable: true, length: 200 })
+  @Column('varchar', { name: 'region', nullable: true, length: 200 })
   region!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'wa_region',
     nullable: true,
     length: 200,

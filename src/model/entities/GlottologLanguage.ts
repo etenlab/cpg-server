@@ -6,27 +6,27 @@ export class GlottologLanguage {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'glottocode',
     nullable: true,
     length: 20,
   })
   glottocode!: string | null;
 
-  @Column('character varying', { name: 'name', nullable: true, length: 200 })
+  @Column('varchar', { name: 'name', nullable: true, length: 200 })
   name!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'top_level_family',
     nullable: true,
     length: 200,
   })
   topLevelFamily!: string | null;
 
-  @Column('character varying', { name: 'iso_639_3', nullable: true, length: 3 })
+  @Column('varchar', { name: 'iso_639_3', nullable: true, length: 3 })
   iso_639_3!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'macro_area',
     nullable: true,
     length: 200,
@@ -36,10 +36,10 @@ export class GlottologLanguage {
   @Column('integer', { name: 'child_dialects', nullable: true })
   childDialects!: number | null;
 
-  @Column('character varying', { name: 'latitude', nullable: true, length: 50 })
+  @Column('varchar', { name: 'latitude', nullable: true, length: 50 })
   latitude!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'longitude',
     nullable: true,
     length: 50,

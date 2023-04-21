@@ -13,45 +13,45 @@ export class GsecListingOfUnengagedUnreachedPeopleGroups {
   @Column('bigint', { name: 'peid', nullable: true })
   peid!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'affinity_bloc',
     nullable: true,
     length: 200,
   })
   affinityBloc!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'people_cluster',
     nullable: true,
     length: 200,
   })
   peopleCluster!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'continent',
     nullable: true,
     length: 200,
   })
   continent!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'sub_continent',
     nullable: true,
     length: 200,
   })
   subContinent!: string | null;
 
-  @Column('character varying', { name: 'country', nullable: true, length: 200 })
+  @Column('varchar', { name: 'country', nullable: true, length: 200 })
   country!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'country_of_origin',
     nullable: true,
     length: 200,
   })
   countryOfOrigin!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'people_group',
     nullable: true,
     length: 200,
@@ -73,17 +73,17 @@ export class GsecListingOfUnengagedUnreachedPeopleGroups {
   @Column('boolean', { name: 'dispersed', nullable: true })
   dispersed!: boolean | null;
 
-  @Column('character varying', { name: 'rol', nullable: true, length: 3 })
+  @Column('varchar', { name: 'rol', nullable: true, length: 3 })
   rol!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'language',
     nullable: true,
     length: 200,
   })
   language!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'religion',
     nullable: true,
     length: 200,
@@ -96,7 +96,7 @@ export class GsecListingOfUnengagedUnreachedPeopleGroups {
   @Column('integer', { name: 'nomadic_type', nullable: true })
   nomadicType!: number | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'nomadic_description',
     nullable: true,
     length: 200,
@@ -127,14 +127,14 @@ export class GsecListingOfUnengagedUnreachedPeopleGroups {
   @Column('integer', { name: 'resources', nullable: true })
   resources!: number | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'physical_exertion',
     nullable: true,
     length: 25,
   })
   physicalExertion!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'freedom_index',
     nullable: true,
     length: 25,
@@ -144,67 +144,67 @@ export class GsecListingOfUnengagedUnreachedPeopleGroups {
   @Column('text', { name: 'government_restrictions_index', nullable: true })
   governmentRestrictionsIndex!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'social_hostilities_index',
     nullable: true,
     length: 25,
   })
   socialHostilitiesIndex!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'threat_level',
     nullable: true,
     length: 250,
   })
   threatLevel!: string | null;
 
-  @Column('character varying', { name: 'rop1', nullable: true, length: 5 })
+  @Column('varchar', { name: 'rop1', nullable: true, length: 5 })
   rop1!: string | null;
 
-  @Column('character varying', { name: 'rop2', nullable: true, length: 10 })
+  @Column('varchar', { name: 'rop2', nullable: true, length: 10 })
   rop2!: string | null;
 
   @Column('integer', { name: 'rop3', nullable: true })
   rop3!: number | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'rop_people_name',
     nullable: true,
     length: 200,
   })
   ropPeopleName!: string | null;
 
-  @Column('character varying', { name: 'genc', nullable: true, length: 3 })
+  @Column('varchar', { name: 'genc', nullable: true, length: 3 })
   genc!: string | null;
 
-  @Column('character varying', { name: 'fips', nullable: true, length: 2 })
+  @Column('varchar', { name: 'fips', nullable: true, length: 2 })
   fips!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'fips_of_origin',
     nullable: true,
     length: 2,
   })
   fipsOfOrigin!: string | null;
 
-  @Column('character varying', { name: 'latitude', nullable: true, length: 50 })
+  @Column('varchar', { name: 'latitude', nullable: true, length: 50 })
   latitude!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'longitude',
     nullable: true,
     length: 50,
   })
   longitude!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'imb_affinity_group',
     nullable: true,
     length: 200,
   })
   imbAffinityGroup!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'not_engaged_anywhere',
     nullable: true,
     length: 5,
@@ -214,14 +214,14 @@ export class GsecListingOfUnengagedUnreachedPeopleGroups {
   @Column('integer', { name: 'spi', nullable: true })
   spi!: number | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'strategic_priority_index',
     nullable: true,
     length: 200,
   })
   strategicPriorityIndex!: string | null;
 
-  @Column('character varying', { name: 'ror', nullable: true, length: 10 })
+  @Column('varchar', { name: 'ror', nullable: true, length: 10 })
   ror!: string | null;
 
   @Column('boolean', { name: 'diaspora', nullable: true })

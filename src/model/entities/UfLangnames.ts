@@ -6,9 +6,9 @@ export class UfLangnames {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', { name: 'code', nullable: true, length: 100 })
+  @Column('varchar', { name: 'code', nullable: true, length: 100 })
   code!: string | null;
 
-  @Column('character varying', { name: 'name', nullable: true, length: 200 })
+  @Column('varchar', { name: 'name', nullable: true, length: 200 })
   name!: string | null;
 }

@@ -6,13 +6,13 @@ export class GlottologFamily {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', { name: 'name', nullable: true, length: 200 })
+  @Column('varchar', { name: 'name', nullable: true, length: 200 })
   name!: string | null;
 
-  @Column('character varying', { name: 'level', nullable: true, length: 200 })
+  @Column('varchar', { name: 'level', nullable: true, length: 200 })
   level!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'macro_area',
     nullable: true,
     length: 550,

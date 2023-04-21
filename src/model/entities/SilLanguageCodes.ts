@@ -6,15 +6,15 @@ export class SilLanguageCodes {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', { name: 'code', length: 3 })
+  @Column('varchar', { name: 'code', length: 3 })
   code!: string;
 
-  @Column('character varying', { name: 'country_code', length: 2 })
+  @Column('varchar', { name: 'country_code', length: 2 })
   countryCode!: string;
 
   @Column('enum', { name: 'status', enum: ['L', 'X'] })
   status!: 'L' | 'X';
 
-  @Column('character varying', { name: 'name', length: 200 })
+  @Column('varchar', { name: 'name', length: 200 })
   name!: string;
 }

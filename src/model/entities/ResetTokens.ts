@@ -6,7 +6,7 @@ import { Column, Entity, Index } from 'typeorm';
 @Entity('reset_tokens', { schema: 'admin' })
 @ObjectType()
 export class ResetTokens {
-  @Column('character varying', { primary: true, name: 'token', length: 250 })
+  @Column('varchar', { primary: true, name: 'token', length: 250 })
   @Field(() => String)
   token: string;
 
@@ -17,7 +17,7 @@ export class ResetTokens {
   @Field(() => Date)
   createdAt: Date;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'user_id',
   })
   @Field(() => String)

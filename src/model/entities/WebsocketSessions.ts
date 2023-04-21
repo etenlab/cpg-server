@@ -11,7 +11,7 @@ import {
 @Index('websocket_sessions_pkey', ['websocketSessionId'], { unique: true })
 @Entity('websocket_sessions', { schema: 'admin' })
 export class WebsocketSessions {
-  @Column('character varying', {
+  @Column('varchar', {
     primary: true,
     name: 'websocket_session_id',
     length: 64,

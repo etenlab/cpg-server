@@ -10,7 +10,7 @@ import {
 @Index('email_tokens_pkey', ['token'], { unique: true })
 @Entity('email_tokens', { schema: 'admin' })
 export class EmailTokens {
-  @Column('character varying', { primary: true, name: 'token', length: 64 })
+  @Column('varchar', { primary: true, name: 'token', length: 64 })
   token: string;
 
   @Column('enum', { name: 'type', enum: ['Confirm', 'Deny'] })

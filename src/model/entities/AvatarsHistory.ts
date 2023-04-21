@@ -14,10 +14,10 @@ export class AvatarsHistory {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'avatar_history_id' })
   avatarHistoryId: string;
 
-  @Column('character varying', { name: 'avatar', length: 64 })
+  @Column('varchar', { name: 'avatar', length: 64 })
   avatar: string;
 
-  @Column('character varying', { name: 'url', nullable: true, length: 128 })
+  @Column('varchar', { name: 'url', nullable: true, length: 128 })
   url: string | null;
 
   @Column('timestamp without time zone', { name: 'created_at' })

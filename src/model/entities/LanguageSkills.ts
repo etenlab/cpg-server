@@ -11,10 +11,10 @@ export class LanguageSkills {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id: string;
 
-  @Column('character varying', { name: 'user_id', unique: true, length: 512 })
+  @Column('varchar', { name: 'user_id', unique: true, length: 512 })
   userId: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'language_table',
     unique: true,
     length: 64,

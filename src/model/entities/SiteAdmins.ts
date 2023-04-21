@@ -7,6 +7,6 @@ export class SiteAdmins {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id: string;
 
-  @Column('character varying', { name: 'name', unique: true, length: 64 })
+  @Column('varchar', { name: 'name', unique: true, length: 64 })
   name: string;
 }

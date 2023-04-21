@@ -6,12 +6,12 @@ export class Iso_639_3Names {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', { name: 'iso_639_3', length: 3 })
+  @Column('varchar', { name: 'iso_639_3', length: 3 })
   iso_639_3!: string;
 
-  @Column('character varying', { name: 'print_name', length: 75 })
+  @Column('varchar', { name: 'print_name', length: 75 })
   printName!: string;
 
-  @Column('character varying', { name: 'inverted_name', length: 75 })
+  @Column('varchar', { name: 'inverted_name', length: 75 })
   invertedName!: string;
 }

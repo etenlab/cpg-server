@@ -9,24 +9,24 @@ export class GsecListingOfUupg_100kRemovals {
   @Column('bigint', { name: 'peid', nullable: true })
   peid!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'affinity_bloc',
     nullable: true,
     length: 200,
   })
   affinityBloc!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'people_cluster',
     nullable: true,
     length: 200,
   })
   peopleCluster!: string | null;
 
-  @Column('character varying', { name: 'country', nullable: true, length: 200 })
+  @Column('varchar', { name: 'country', nullable: true, length: 200 })
   country!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'people_group',
     nullable: true,
     length: 200,
@@ -39,14 +39,14 @@ export class GsecListingOfUupg_100kRemovals {
   })
   globalStatusOfEvangelicalChristianity!: number | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'language',
     nullable: true,
     length: 200,
   })
   language!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'religion',
     nullable: true,
     length: 200,

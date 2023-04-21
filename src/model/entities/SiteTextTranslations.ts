@@ -22,23 +22,23 @@ export class SiteTextTranslations {
   @Column('bigint', { name: 'site_text', unique: true })
   siteText: string;
 
-  @Column('character varying', { name: 'language_table', length: 64 })
+  @Column('varchar', { name: 'language_table', length: 64 })
   languageTable: string;
 
   @Column('bigint', { name: 'language_id' })
   languageId: string;
 
-  @Column('character varying', { name: 'user_id', length: 512 })
+  @Column('varchar', { name: 'user_id', length: 512 })
   userId: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'site_text_translation',
     unique: true,
     length: 512,
   })
   siteTextTranslation: string;
 
-  @Column('character varying', { name: 'description_translation', length: 512 })
+  @Column('varchar', { name: 'description_translation', length: 512 })
   descriptionTranslation: string;
 
   @ManyToOne(

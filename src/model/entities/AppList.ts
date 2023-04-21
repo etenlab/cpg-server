@@ -13,7 +13,7 @@ export class AppList {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'app_name',
     nullable: true,
     length: 128,

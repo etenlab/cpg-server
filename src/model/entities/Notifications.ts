@@ -17,12 +17,12 @@ export class Notifications {
   @Column('integer', { name: 'user_id' })
   userId: number;
 
-  @Column('character varying', { name: 'table_name' })
+  @Column('varchar', { name: 'table_name' })
   tableName: string;
 
   @Column('integer', { name: 'row' })
   row: number;
 
-  @Column('character varying', { name: 'content' })
+  @Column('varchar', { name: 'content' })
   content: string;
 }

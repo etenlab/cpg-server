@@ -6,14 +6,14 @@ export class UfLanguagesWithOpenBibleStories {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'language',
     nullable: true,
     length: 200,
   })
   language!: string | null;
 
-  @Column('character varying', { name: 'media', nullable: true, length: 25 })
+  @Column('varchar', { name: 'media', nullable: true, length: 25 })
   media!: string | null;
 
   @Column('boolean', {
