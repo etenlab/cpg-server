@@ -18,20 +18,6 @@ type SyncTableConfig = {
   }[];
 };
 
-function textToJson(value: string | null) {
-  if (value === null) {
-    return null;
-  }
-  return JSON.parse(value);
-}
-
-function jsonToText(value: string | null) {
-  if (value === null) {
-    return null;
-  }
-  return JSON.stringify(value);
-}
-
 // Make sure to have correct order of tables to satisfy foreign key constraints
 const tableConfigFactory = (
   configService: ConfigService,
@@ -98,8 +84,8 @@ const tableConfigFactory = (
         },
         {
           local: 'property_value',
-          convertToLocal: textToJson,
-          convertToRemote: jsonToText,
+          // convertToLocal: textToJson,
+          // convertToRemote: jsonToText,
         },
       ],
     },
@@ -169,8 +155,8 @@ const tableConfigFactory = (
         },
         {
           local: 'property_value',
-          convertToLocal: textToJson,
-          convertToRemote: jsonToText,
+          // convertToLocal: textToJson,
+          // convertToRemote: jsonToText,
         },
       ],
     },
