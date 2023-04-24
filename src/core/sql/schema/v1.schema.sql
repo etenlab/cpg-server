@@ -287,7 +287,7 @@ CREATE TABLE "node_property_values" (
   "updated_at" timestamp, 
   CONSTRAINT "REL_node_property_key_id" UNIQUE ("node_property_key_id"), 
   CONSTRAINT "FK_node_property_key_id__node_property_keys" 
-    FOREIGN KEY ("node_property_key_id") REFERENCES "node_property_keys" ("node_property_key_id") ON DELETE NO ACTION ON UPDATE NO ACTION
+    FOREIGN KEY ("node_property_key_id") REFERENCES "node_property_keys" ("node_property_key_id") ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
 CREATE TABLE "relationships" (

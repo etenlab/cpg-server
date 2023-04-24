@@ -50,8 +50,8 @@ const tableConfigFactory = (
       ],
     },
     {
-      localTableName: 'nodes',
-      remoteTableName: 'nodes',
+      localTableName: TableNameConst.NODES,
+      remoteTableName: TableNameConst.NODES,
       localPK: 'node_id',
       schema: configService.get('DB_SCHEMA'),
       columns: [
