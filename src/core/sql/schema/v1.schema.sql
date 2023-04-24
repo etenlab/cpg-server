@@ -240,7 +240,8 @@ CREATE TABLE "files" (
   "file_name" varchar NOT NULL, 
   "file_size" bigint NOT NULL, 
   "file_type" varchar NOT NULL, 
-  "file_url" varchar NOT NULL
+  "file_url" varchar NOT NULL,
+  "file_hash" varchar(255) NOT NULL
 );
 
 CREATE TABLE "users" (
