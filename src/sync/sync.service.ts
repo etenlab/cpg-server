@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
-import { TableNameConst } from '../constants';
+import { DEFAULT_SCHEMA, TableNameConst } from '../constants';
 import { ConfigService } from '@nestjs/config';
 
 type SyncTableConfig = {
@@ -36,12 +36,13 @@ function jsonToText(value: string | null) {
 const tableConfigFactory = (
   configService: ConfigService,
 ): SyncTableConfig[] => {
+  const schema = configService.get('DB_SCHEMA') || DEFAULT_SCHEMA;
   return [
     {
       localTableName: TableNameConst.NODE_TYPES,
       remoteTableName: TableNameConst.NODE_TYPES,
       localPK: 'type_name',
-      schema: configService.get('DB_SCHEMA'),
+      schema,
       columns: [
         { local: 'updated_at' },
         {
@@ -53,7 +54,7 @@ const tableConfigFactory = (
       localTableName: TableNameConst.NODES,
       remoteTableName: TableNameConst.NODES,
       localPK: 'node_id',
-      schema: configService.get('DB_SCHEMA'),
+      schema,
       columns: [
         { local: 'updated_at' },
         {
@@ -68,7 +69,7 @@ const tableConfigFactory = (
       localTableName: TableNameConst.NODE_PROPERTY_KEYS,
       remoteTableName: TableNameConst.NODE_PROPERTY_KEYS,
       localPK: 'node_property_key_id',
-      schema: configService.get('DB_SCHEMA'),
+      schema,
       columns: [
         { local: 'updated_at' },
         {
@@ -86,7 +87,7 @@ const tableConfigFactory = (
       localTableName: TableNameConst.NODE_PROPERTY_VALUES,
       remoteTableName: TableNameConst.NODE_PROPERTY_VALUES,
       localPK: 'node_property_value_id',
-      schema: configService.get('DB_SCHEMA'),
+      schema,
       columns: [
         { local: 'updated_at' },
         {
@@ -106,7 +107,7 @@ const tableConfigFactory = (
       localTableName: TableNameConst.RELATIONSHIP_TYPES,
       remoteTableName: TableNameConst.RELATIONSHIP_TYPES,
       localPK: 'type_name',
-      schema: configService.get('DB_SCHEMA'),
+      schema,
       columns: [
         { local: 'updated_at' },
         {
@@ -118,7 +119,7 @@ const tableConfigFactory = (
       localTableName: TableNameConst.RELATIONSHIPS,
       remoteTableName: TableNameConst.RELATIONSHIPS,
       localPK: 'relationship_id',
-      schema: configService.get('DB_SCHEMA'),
+      schema,
       columns: [
         { local: 'updated_at' },
         {
@@ -139,7 +140,7 @@ const tableConfigFactory = (
       localTableName: TableNameConst.RELATIONSHIP_PROPERTY_KEYS,
       remoteTableName: TableNameConst.RELATIONSHIP_PROPERTY_KEYS,
       localPK: 'relationship_property_key_id',
-      schema: configService.get('DB_SCHEMA'),
+      schema,
       columns: [
         { local: 'updated_at' },
         {
@@ -157,7 +158,7 @@ const tableConfigFactory = (
       localTableName: TableNameConst.RELATIONSHIP_PROPERTY_VALUES,
       remoteTableName: TableNameConst.RELATIONSHIP_PROPERTY_VALUES,
       localPK: 'relationship_property_value_id',
-      schema: configService.get('DB_SCHEMA'),
+      schema,
       columns: [
         { local: 'updated_at' },
         {
