@@ -27,6 +27,9 @@ export class FileDecoratorsGQL {
 
   @Field(() => String)
   fileUrl: string;
+
+  @Field(() => String)
+  fileHash: string;
 }
 
 @Resolver(() => File)
