@@ -8,14 +8,14 @@ export class UfLanguagesWithOneStoryBibleStories {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'language',
     nullable: true,
     length: 200,
   })
   language!: string | null;
 
-  @Column('character varying', { name: 'media', nullable: true, length: 25 })
+  @Column('varchar', { name: 'media', nullable: true, length: 25 })
   media!: string | null;
 
   @Column('boolean', {
@@ -25,6 +25,6 @@ export class UfLanguagesWithOneStoryBibleStories {
   })
   published!: boolean | null;
 
-  @Column('character varying', { name: 'info', nullable: true, length: 500 })
+  @Column('varchar', { name: 'info', nullable: true, length: 500 })
   info!: string | null;
 }

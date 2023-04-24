@@ -6,12 +6,12 @@ export class SilCountryCodes {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', { name: 'code', length: 2 })
+  @Column('varchar', { name: 'code', length: 2 })
   code!: string;
 
-  @Column('character varying', { name: 'name', length: 200 })
+  @Column('varchar', { name: 'name', length: 200 })
   name!: string;
 
-  @Column('character varying', { name: 'area', length: 200 })
+  @Column('varchar', { name: 'area', length: 200 })
   area!: string;
 }

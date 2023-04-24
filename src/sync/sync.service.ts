@@ -52,12 +52,12 @@ const tableConfigFactory = (
     {
       localTableName: 'nodes',
       remoteTableName: 'nodes',
-      localPK: 'id',
+      localPK: 'node_id',
       schema: configService.get('DB_SCHEMA'),
       columns: [
         { local: 'updated_at' },
         {
-          local: 'id',
+          local: 'node_id',
         },
         {
           local: 'node_type',
@@ -67,12 +67,12 @@ const tableConfigFactory = (
     {
       localTableName: TableNameConst.NODE_PROPERTY_KEYS,
       remoteTableName: TableNameConst.NODE_PROPERTY_KEYS,
-      localPK: 'id',
+      localPK: 'node_property_key_id',
       schema: configService.get('DB_SCHEMA'),
       columns: [
         { local: 'updated_at' },
         {
-          local: 'id',
+          local: 'node_property_key_id',
         },
         {
           local: 'node_id',
@@ -85,12 +85,12 @@ const tableConfigFactory = (
     {
       localTableName: TableNameConst.NODE_PROPERTY_VALUES,
       remoteTableName: TableNameConst.NODE_PROPERTY_VALUES,
-      localPK: 'id',
+      localPK: 'node_property_value_id',
       schema: configService.get('DB_SCHEMA'),
       columns: [
         { local: 'updated_at' },
         {
-          local: 'id',
+          local: 'node_property_value_id',
         },
         {
           local: 'node_property_key_id',
@@ -117,12 +117,12 @@ const tableConfigFactory = (
     {
       localTableName: TableNameConst.RELATIONSHIPS,
       remoteTableName: TableNameConst.RELATIONSHIPS,
-      localPK: 'id',
+      localPK: 'relationship_id',
       schema: configService.get('DB_SCHEMA'),
       columns: [
         { local: 'updated_at' },
         {
-          local: 'id',
+          local: 'relationship_id',
         },
         {
           local: 'relationship_type',
@@ -138,12 +138,12 @@ const tableConfigFactory = (
     {
       localTableName: TableNameConst.RELATIONSHIP_PROPERTY_KEYS,
       remoteTableName: TableNameConst.RELATIONSHIP_PROPERTY_KEYS,
-      localPK: 'id',
+      localPK: 'relationship_property_key_id',
       schema: configService.get('DB_SCHEMA'),
       columns: [
         { local: 'updated_at' },
         {
-          local: 'id',
+          local: 'relationship_property_key_id',
         },
         {
           local: 'relationship_id',
@@ -156,12 +156,12 @@ const tableConfigFactory = (
     {
       localTableName: TableNameConst.RELATIONSHIP_PROPERTY_VALUES,
       remoteTableName: TableNameConst.RELATIONSHIP_PROPERTY_VALUES,
-      localPK: 'id',
+      localPK: 'relationship_property_value_id',
       schema: configService.get('DB_SCHEMA'),
       columns: [
         { local: 'updated_at' },
         {
-          local: 'id',
+          local: 'relationship_property_value_id',
         },
         {
           local: 'relationship_property_key_id',

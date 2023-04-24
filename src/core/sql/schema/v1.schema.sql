@@ -1,9 +1,16 @@
 -- schema.sql
 -- can only be run after the bootstrap.sql file is run manually to setup the db
 
--- GENERAL ------------------------------------------------------------
-
 create schema admin;
+SET search_path TO admin;
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+-- GENERAL ----------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION random_between(low INT ,high INT)
    RETURNS INT AS
@@ -33,7 +40,7 @@ create table database_version_control (
 
 -- AUTHENTICATION ---------------------------------------------------
 
-create table admin.users (
+create table admin.users_internal (
   user_id bigserial primary key,
   active bool not null default true,
   email varchar(255) unique not null,
@@ -44,10 +51,10 @@ create table admin.users (
 );
 
 -- make room for manually created service accounts
-alter sequence admin.users_user_id_seq restart with 100; 
+alter sequence admin.users_internal_user_id_seq restart with 100; 
 
 create table admin.avatars(
-  user_id bigint not null references admin.users(user_id),
+  user_id bigint not null references admin.users_internal(user_id),
   avatar varchar(64) unique not null,
   url varchar(128),
   created_at timestamp not null default current_timestamp,
@@ -56,7 +63,7 @@ create table admin.avatars(
 
 create table admin.avatars_history(
   avatar_history_id bigserial primary key,
-  user_id bigint not null references admin.users(user_id),
+  user_id bigint not null references admin.users_internal(user_id),
   avatar varchar(64) not null,
   url varchar(128),
   created_at timestamp not null,
@@ -70,7 +77,7 @@ create type admin.token_type as enum (
 
 create table admin.tokens (
   token_id bigserial primary key,
-  user_id bigint references admin.users(user_id),
+  user_id bigint references admin.users_internal(user_id),
   created_at timestamp not null default current_timestamp,
   token text
 );
@@ -80,7 +87,7 @@ create index on admin.tokens(user_id, token);
 
 create table admin.email_tokens(
   token varchar(64) primary key,
-  user_id bigint not null references admin.users(user_id),
+  user_id bigint not null references admin.users_internal(user_id),
   type admin.token_type not null,
   created_at timestamp not null default current_timestamp
 );
@@ -93,7 +100,7 @@ create table admin.reset_tokens(
 
 create table admin.websocket_sessions (
   websocket_session_id varchar(64) not null primary key,
-  user_id bigint references admin.users(user_id),
+  user_id bigint references admin.users_internal(user_id),
   created_at timestamp not null default current_timestamp,
   token text not null -- one to many
 );
@@ -192,235 +199,10 @@ create table admin.site_text_translations(
   unique (site_text, site_text_translation)
 );
 
--- GRAPH ------------------------------------------------------------
-
-create table admin.node_types (
-  type_name varchar(32) primary key,
-  updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
-);
-
-create table admin.nodes (
-  id varchar(21) primary key,
-  node_type varchar(32) references admin.node_types(type_name),
-  updated_at timestamp null default CURRENT_TIMESTAMP,
-  sync_layer bigint,
-);
-
-create table admin.node_property_keys (
-  id varchar(21) primary key,
-  node_id varchar(21) references admin.nodes(id) not null,
-  property_key varchar(64) not null,
-  updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
-);
-
-create index idx_node_property_keys_node_id_key on admin.node_property_keys (node_id);
-
-create table admin.node_property_values (
-  id varchar(21) primary key,
-  property_value jsonb null,
-  node_property_key_id varchar(21) references admin.node_property_keys(id) not null,
-  updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
-);
-
-create index idx_node_property_values_key_id on admin.node_property_values (node_property_key_id);
-
-create table admin.relationship_types (
-  type_name varchar(32) primary key,
-  updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
-);
-
-create table admin.relationships (
-  id varchar(21) primary key,
-  relationship_type varchar(32) references admin.relationship_types(type_name),
-  from_node_id varchar(21) references admin.nodes(id),
-  to_node_id varchar(21) references admin.nodes(id),
-  updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
-);
-
-create index idx_relationships_from_node_id on admin.relationships (from_node_id);
-create index idx_relationships_to_node_id on admin.relationships (to_node_id);
-
-create table admin.relationship_property_keys (
-  id varchar(21) primary key,
-  property_key varchar(64) not null,
-  relationship_id varchar(21) references admin.relationships(id) not null,
-  updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
-);
-
-create index idx_relationship_property_keys_relationship_id on admin.relationship_property_keys (relationship_id);
-
-create table admin.relationship_property_values (
-  id varchar(21) primary key,
-  property_value jsonb null,
-  property_key_id varchar(21) references admin.relationship_property_keys(id) not null,
-  updated_at timestamp null default CURRENT_TIMESTAMP
-  sync_layer bigint,
-);
-
-create index idx_relationship_property_values_key_id on admin.relationship_property_values (property_key_id);
-
-insert into admin.node_types (type_name) values
-  ('word'),
-  ('addition'),
-  ('word-sequence'),
-  ('sentence'),
-  ('verse'),
-  ('paragraph'),
-  ('chapter'),
-  ('section'),
-  ('book'),
-  ('bible'),
-  ('definition'),
-  ('article'),
-  ('lexical-entry'),
-  ('strongs-entry'),
-  ('map'),
-  ('language'),
-  ('word-to-language-entry'),
-  ('word-to-translation'),
-  ('word-map'),
-  ('map-language');
-
-insert into admin.relationship_types (type_name) values
-  ('word-sequence-to-word'),
-  ('verse-to-word-sequence'),
-  ('sentence-to-word-sequence'),
-  ('chapter-to-verse'),
-  ('book-to-chapter'),
-  ('chapter-to-section'),
-  ('chapter-to-paragraph'),
-  ('bible-to-book'),
-  ('word-to-article'),
-  ('word-to-strongs-entry'),
-  ('word-to-addition'),
-  ('section-to-paragraph'),
-  ('section-to-section'),
-  ('article-to-section'),
-  ('article-to-paragraph'),
-  ('article-to-sentence'),
-  ('paragraph-to-sentence'),
-  ('paragraph-to-verse'),
-  ('verse-to-sentence'),
-  ('sentence-to-word'),
-  ('word-to-language-entry'),
-  ('word-to-translation'),
-  ('word-map'),
-  ('map-language');
-
--- voting ---------------------------------------------------
-create table admin.votables(
-  table_name varchar(64) not null unique
-);
-
-create table admin.elections (
-  id bigserial primary key,
-  app_id bigint not null, -- todo, references app
-  name varchar(128) not null,
-  table_name varchar(64) not null references admin.votables(table_name),
-  row bigint not null,
-  created_by varchar(512), -- placeholder, not sure how to reference users yet
-  unique (app_id, name)
-);
-
-create table admin.ballot_entries (
-  id bigserial primary key,
-  election_id bigint not null references admin.elections(id),
-  table_name varchar(64) not null references admin.votables(table_name),
-  row bigint not null,
-  created_by varchar(512) -- placeholder, not sure how to reference users yet
-);
-
-create table admin.votes (
-  id bigserial primary key,
-  user_id varchar(512),
-  ballot_entry_id bigint not null references admin.ballot_entries(id),
-  up bool not null, -- true = up vote, false = down vote, delete record to remove vote from user
-  unique (user_id, ballot_entry_id)
-);
-
-create table admin.question_types (
-  question_type varchar(64) not null unique
-);
-
-create table admin.questions (
-  id bigserial primary key,
-  text text not null,
-  type varchar(64) not null references admin.question_types(question_type),
-  created_by varchar(512)
-);
-
-create table admin.answers (
-  id bigserial primary key,
-  question_id bigint not null references admin.questions(id),
-  text varchar(128),
-  feedback varchar(256)
-);
-
--- discussion ---------------------------------------------------
-create table admin.discussions (
-  id bigserial primary key,
-  app bigint not null references admin.app_list(id),
-  org bigint not null references admin.organizations(id),
-  table_name varchar(64) not null,
-  row bigint not null
-);
-
-create table admin.posts (
-  id bigserial primary key,
-  discussion_id bigint references admin.discussions(id),
-  user_id bigint not null references admin.users(user_id), 
-  -- prolly will change, not sure how we will reference users yet
-  quill_text text,
-  plain_text text,
-  postgres_language regconfig not null default 'simple',
-  search_text tsvector generated always as (
-  		to_tsvector(
-   			postgres_language,
-  			plain_text
-  		)
-  ) stored,
-  is_edited bool not null default false,
-  reply_id bigint references admin.posts(id),
-  created_at timestamp default current_timestamp
-);
-
-create index posts_search_gin on admin.posts using gin (search_text);
-
-create table admin.reactions (
-  id bigserial primary key,
-  user_id bigint not null references admin.users(user_id), 
-  -- will change, we use sso to track users
-  post_id bigint not null references admin.posts(id),
-  content varchar(64) not null,
-  unique (user_id, content, post_id)
-);
-
--- file ---------------------------------------------------
-create table admin.files (
-  id bigserial primary key,
-  file_name varchar(256) not null,
-  file_size bigint not null,
-  file_type varchar(256),
-  file_url varchar(256) not null
-);
-
--- relationship_post_file ---------------------------------
-create table admin.relationship_post_file (
-  id bigserial primary key,
-  post_id bigint not null references admin.posts(id),
-  file_id bigint not null references admin.files(id)
-);
-
 -- NOTIFICATIONS ----------------------------------------------------
 create table admin.notifications (
   id bigserial primary key,
-  user_id bigint not null references admin.users(user_id),
+  user_id bigint not null references admin.users_internal(user_id),
   table_name varchar(64) not null,
   row bigint not null,
   acknowledged bool not null default false,
@@ -428,26 +210,251 @@ create table admin.notifications (
   created_at timestamp default current_timestamp
 );
 
--- UPDATE STRUCTURE -------------------------------------------------
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+-- Tables for entities from common library 'MODELS'   ---------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
 
 
-ALTER TABLE IF EXISTS "admin".node_property_value RENAME TO node_property_values;
-ALTER TABLE IF EXISTS "admin".node_property_key RENAME TO node_property_keys;
-ALTER TABLE IF EXISTS "admin".node_type RENAME TO node_types;
-ALTER TABLE IF EXISTS "admin".node RENAME TO nodes;
-ALTER TABLE IF EXISTS "admin".relationship_property_key RENAME TO relationship_property_keys;
-ALTER TABLE IF EXISTS "admin".relationship_property_value RENAME TO relationship_property_values;
-ALTER TABLE IF EXISTS "admin".relationship_type RENAME TO relationship_types;
-ALTER TABLE IF EXISTS "admin".relationship RENAME TO relationships;
+CREATE TABLE "relationship_types" (
+  "sync_layer" bigint NOT NULL DEFAULT (0), 
+  "type_name" varchar PRIMARY KEY NOT NULL, 
+  "updated_at" timestamp);
 
-ALTER TABLE "admin".node_property_values ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
-ALTER TABLE "admin".node_property_keys ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
-ALTER TABLE "admin".node_types ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
-ALTER TABLE "admin".nodes ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
-ALTER TABLE "admin".relationship_property_keys ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
-ALTER TABLE "admin".relationship_property_values ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
-ALTER TABLE "admin".relationship_types ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
-ALTER TABLE "admin".relationships ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
+CREATE TABLE "node_types" (
+  "sync_layer" bigint NOT NULL DEFAULT (0), 
+  "type_name" varchar PRIMARY KEY NOT NULL, 
+  "updated_at" timestamp);
+
+CREATE TABLE "election_types" (
+  "sync_layer" bigint NOT NULL DEFAULT (0), 
+  "type_name" varchar PRIMARY KEY NOT NULL
+);
+
+CREATE TABLE "files" (
+  "file_id" bigserial PRIMARY KEY NOT NULL, 
+  "file_name" varchar NOT NULL, 
+  "file_size" bigint NOT NULL, 
+  "file_type" varchar NOT NULL, 
+  "file_url" varchar NOT NULL
+);
+
+CREATE TABLE "users" (
+  "user_id" bigserial PRIMARY KEY NOT NULL, 
+  "username" varchar(255) NOT NULL, 
+  "first_name" varchar, 
+  "last_name" varchar, 
+CONSTRAINT "UQ_users_username" UNIQUE ("username")
+);
+
+CREATE TABLE "sync_sessions" (
+  "sync_session" bigserial PRIMARY KEY NOT NULL, 
+  "syncFrom" integer NOT NULL, 
+  "syncTo" integer NOT NULL, 
+  "createdAt" timestamp NOT NULL, 
+  "completed" boolean NOT NULL, 
+  "error" text
+);
+
+CREATE TABLE "nodes" (
+  "sync_layer" bigint NOT NULL DEFAULT (0), 
+  "node_id" varchar(21) PRIMARY KEY NOT NULL, 
+  "node_type" varchar NOT NULL, 
+  "updated_at" timestamp, 
+  CONSTRAINT "FK_node_type__node_types" 
+    FOREIGN KEY ("node_type") REFERENCES "node_types" ("type_name") ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE "node_property_keys" (
+  "sync_layer" bigint NOT NULL DEFAULT (0), 
+  "node_property_key_id" varchar(21) PRIMARY KEY NOT NULL, 
+  "property_key" varchar NOT NULL, 
+  "node_id" varchar NOT NULL, 
+  "updated_at" timestamp, 
+  CONSTRAINT "FK_node_id__nodes" 
+    FOREIGN KEY ("node_id") REFERENCES "nodes" ("node_id") ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE "node_property_values" (
+  "sync_layer" bigint NOT NULL DEFAULT (0), 
+  "node_property_value_id" varchar(21) PRIMARY KEY NOT NULL, 
+  "property_value" varchar NOT NULL, 
+  "node_property_key_id" varchar NOT NULL, 
+  "updated_at" timestamp, 
+  CONSTRAINT "REL_node_property_key_id" UNIQUE ("node_property_key_id"), 
+  CONSTRAINT "FK_node_property_key_id__node_property_keys" 
+    FOREIGN KEY ("node_property_key_id") REFERENCES "node_property_keys" ("node_property_key_id") ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+CREATE TABLE "relationships" (
+  "sync_layer" bigint NOT NULL DEFAULT (0), 
+  "relationship_id" varchar(21) PRIMARY KEY NOT NULL, 
+  "relationship_type" varchar NOT NULL, 
+  "from_node_id" varchar NOT NULL, 
+  "to_node_id" varchar NOT NULL, 
+  "updated_at" timestamp, 
+  CONSTRAINT "FK_relationship_type__relationship_types" 
+    FOREIGN KEY ("relationship_type") REFERENCES "relationship_types" ("type_name") ON DELETE CASCADE ON UPDATE NO ACTION, 
+  CONSTRAINT "FK_from_node_id__nodes" 
+    FOREIGN KEY ("from_node_id") REFERENCES "nodes" ("node_id") ON DELETE CASCADE ON UPDATE NO ACTION, 
+  CONSTRAINT "FK_to_node_id__nodes" 
+    FOREIGN KEY ("to_node_id") REFERENCES "nodes" ("node_id") ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+
+CREATE TABLE "relationship_property_keys" (
+  "sync_layer" bigint NOT NULL DEFAULT (0), 
+  "relationship_property_key_id" varchar(21) PRIMARY KEY NOT NULL, 
+  "property_key" varchar NOT NULL, "relationship_id" varchar NOT NULL, 
+  "updated_at" timestamp, 
+  CONSTRAINT "FK_relationship_id__relationships" 
+    FOREIGN KEY ("relationship_id") REFERENCES "relationships" ("relationship_id") ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE "relationship_property_values" (
+  "sync_layer" bigint NOT NULL DEFAULT (0), 
+  "relationship_property_value_id" varchar(21) PRIMARY KEY NOT NULL, 
+  "property_value" varchar NOT NULL, 
+  "relationship_property_key_id" varchar NOT NULL, 
+  "updated_at" timestamp, 
+  CONSTRAINT "REL_relationship_property_key_id" UNIQUE ("relationship_property_key_id"), 
+  CONSTRAINT "FK_relationship_property_key_id__relationship_property_keys" 
+    FOREIGN KEY ("relationship_property_key_id") REFERENCES "relationship_property_keys" ("relationship_property_key_id") ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+CREATE TABLE "elections" (
+  "sync_layer" bigint NOT NULL DEFAULT (0), 
+  "election_id" varchar(21) PRIMARY KEY NOT NULL, 
+  "election_type" varchar NOT NULL, 
+  "election_ref" varchar NOT NULL,
+  "ref_table_name" varchar NOT NULL, 
+  "candidate_ref_table_name" varchar NOT NULL, 
+  CONSTRAINT "FK_election_type__election_types" 
+    FOREIGN KEY ("election_type") REFERENCES "election_types" ("type_name") ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE "candidates" (
+  "sync_layer" bigint NOT NULL DEFAULT (0), 
+  "candidate_id" varchar(21) PRIMARY KEY NOT NULL, 
+  "election_id" varchar NOT NULL, 
+  "candidate_ref" varchar NOT NULL, 
+  CONSTRAINT "FK_election_id__elections" 
+    FOREIGN KEY ("election_id") REFERENCES "elections" ("election_id") ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE "votes" (
+  "sync_layer" bigint NOT NULL DEFAULT (0), 
+  "vote_id" varchar(21) PRIMARY KEY NOT NULL, 
+  "candidate_id" varchar NOT NULL, 
+  "user_id" varchar NOT NULL, 
+  "vote" boolean NOT NULL, 
+  CONSTRAINT "FK_candidate_id__candidates" 
+    FOREIGN KEY ("candidate_id") REFERENCES "candidates" ("candidate_id") ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+
+CREATE TABLE "discussions" (
+  "discussion_id" bigserial PRIMARY KEY NOT NULL, 
+  "table_name" varchar NOT NULL, 
+  "row" integer, 
+  "app" integer NOT NULL DEFAULT (0),
+  "org" integer NOT NULL DEFAULT (0)
+);
+
+CREATE TABLE "posts" (
+  "post_id" bigserial PRIMARY KEY NOT NULL, 
+  "discussion_id" integer NOT NULL, 
+  "user_id" integer NOT NULL, 
+  "quill_text" varchar NOT NULL, 
+  "plain_text" varchar NOT NULL, 
+  "isEdited" boolean NOT NULL DEFAULT false, 
+  "replyId" bigint, 
+  "created_at" timestamp, 
+  "postgres_language" varchar NOT NULL, 
+  "reply_id" integer, 
+  CONSTRAINT "FK_user_id__users" 
+    FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE ON UPDATE NO ACTION, 
+  CONSTRAINT "FK_discussion_id__discussions" 
+    FOREIGN KEY ("discussion_id") REFERENCES "discussions" ("discussion_id") ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE "reactions" (
+  "reaction_id" bigserial PRIMARY KEY NOT NULL, 
+  "post_id" integer NOT NULL, 
+  "user_id" integer NOT NULL, 
+  "content" varchar NOT NULL, 
+  CONSTRAINT "FK_user_id__users" 
+    FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE ON UPDATE NO ACTION, 
+  CONSTRAINT "FK_post_id__posts" 
+    FOREIGN KEY ("post_id") REFERENCES "posts" ("post_id") ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE "relationship_post_files" (
+  "relationship_post_file_id" bigserial PRIMARY KEY NOT NULL, 
+  "post_id" integer NOT NULL, 
+  "file_id" integer NOT NULL, 
+  CONSTRAINT "REL_relationship_post_files_file_id" UNIQUE ("file_id"),
+  CONSTRAINT "FK_post_id__posts" 
+    FOREIGN KEY ("post_id") REFERENCES "posts" ("post_id") ON DELETE CASCADE ON UPDATE NO ACTION, 
+  CONSTRAINT "FK_file_id__files" 
+    FOREIGN KEY ("file_id") REFERENCES "files" ("file_id") ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+create index idx_node_property_keys_node_id_key on node_property_keys (node_id);
+create index idx_node_property_values_key_id on node_property_values (node_property_key_id);
+create index idx_relationships_from_node_id on relationships (from_node_id);
+create index idx_relationships_to_node_id on relationships (to_node_id);
+create index idx_relationship_property_keys_relationship_id on relationship_property_keys (relationship_id);
+create index idx_relationship_property_values_key_id on relationship_property_values (relationship_property_key_id);
+
+insert into node_types (type_name) values
+('table'),
+('table-column'),
+('table-row'),
+('table-cell'),
+('table-cell-pseudo'),
+('election'),
+('entry'),
+('lexicon'),
+('lexical_category'),
+('grammatical_category'),
+('grammeme'),
+('lexeme'),
+('word_form'),
+('document'),
+('map'),
+('word'),
+('word-sequence'),
+('language'),
+('map-language'),
+('user'),
+('definition'),
+('phrase');
+
+insert into relationship_types (type_name) values
+('table-to-column'),
+('table-to-row'),
+('table-column-to-cell'),
+('table-row-to-cell'),
+('election-to-ballot-entry'),
+('word-to-language-entry'),
+('word-map'),
+('word-to-translation'),
+('word-sequence-to-word'),
+('word-sequence-to-language-entry'),
+('word-sequence-to-document'),
+('word-sequence-to-creator'),
+('word-sequence-to-word-sequence'),
+('word-sequence-to-translation'),
+('word-sequence-to-sub-word-sequence'),
+('word-to-definition'),
+('phrase-to-definition'),
+('phrase-to-language-entry');
+
 
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
@@ -458,7 +465,7 @@ ALTER TABLE "admin".relationships ADD COLUMN IF NOT EXISTS sync_layer int8 NULL;
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
-
+create schema public;
 SET search_path TO public;
 
 create type iso_639_2_entry_type as enum (
@@ -1045,25 +1052,3 @@ create table glottolog_family(
     child_languages int,
     top_level_family int
 );
-
-CREATE MATERIALIZED VIEW strongs_dictionary
-AS
-SELECT n.node_id
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'lemma' AS lemma
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'xlit' AS xlit
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'pron' AS pron
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'derivation' AS derivation
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'strongs_def' AS strongs_def
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'kjv_def' AS kjv_def
-, jsonb_object_agg(npk.property_key, npv.property_value->'value')->>'strongs_id' AS strongs_id
-FROM admin.nodes n
-LEFT JOIN admin.node_property_keys npk ON
-npk.node_id = n.node_id
-LEFT JOIN admin.node_property_values npv ON
-npv.node_property_key_id = npk.node_property_key_id
-WHERE n.node_type = 'strongs-entry'
-GROUP BY n.node_id
-WITH DATA;
-
-CREATE UNIQUE INDEX idx_strongs_dictionary_strongs_id
-  ON strongs_dictionary (strongs_id);

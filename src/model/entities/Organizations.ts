@@ -14,7 +14,7 @@ export class Organizations {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id: string;
 
-  @Column('character varying', { name: 'name', unique: true, length: 128 })
+  @Column('varchar', { name: 'name', unique: true, length: 128 })
   name: string;
 
   @OneToMany(() => Roles, (roles) => roles.organization2)

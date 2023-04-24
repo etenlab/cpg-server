@@ -6,14 +6,14 @@ export class RodAlternatenameindex {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'dialect_code',
     nullable: true,
     length: 10,
   })
   dialectCode!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'variant_name',
     nullable: true,
     length: 500,

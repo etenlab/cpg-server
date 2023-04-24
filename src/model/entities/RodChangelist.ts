@@ -6,7 +6,7 @@ export class RodChangelist {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'dialect_code',
     nullable: true,
     length: 10,
@@ -16,21 +16,21 @@ export class RodChangelist {
   @Column('timestamp without time zone', { name: 'date', nullable: true })
   date!: Date | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'change_type',
     nullable: true,
     length: 3,
   })
   changeType!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'prev_language_code',
     nullable: true,
     length: 3,
   })
   prevLanguageCode!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'new_language_code',
     nullable: true,
     length: 3,

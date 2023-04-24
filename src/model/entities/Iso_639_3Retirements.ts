@@ -6,10 +6,10 @@ export class Iso_639_3Retirements {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id!: string;
 
-  @Column('character varying', { name: 'iso_639_3', length: 3 })
+  @Column('varchar', { name: 'iso_639_3', length: 3 })
   iso_639_3!: string;
 
-  @Column('character varying', { name: 'ref_name', length: 150 })
+  @Column('varchar', { name: 'ref_name', length: 150 })
   refName!: string;
 
   @Column('enum', {
@@ -19,10 +19,10 @@ export class Iso_639_3Retirements {
   })
   retReason!: 'C' | 'D' | 'N' | 'S' | 'M' | null;
 
-  @Column('character varying', { name: 'change_to', nullable: true, length: 3 })
+  @Column('varchar', { name: 'change_to', nullable: true, length: 3 })
   changeTo!: string | null;
 
-  @Column('character varying', {
+  @Column('varchar', {
     name: 'ret_remedy',
     nullable: true,
     length: 300,
