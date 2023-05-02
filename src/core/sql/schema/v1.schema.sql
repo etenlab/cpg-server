@@ -357,31 +357,46 @@ CREATE TABLE "votes" (
     FOREIGN KEY ("candidate_id") REFERENCES "candidates" ("candidate_id") ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
-
 CREATE TABLE "discussions" (
-  "discussion_id" bigserial PRIMARY KEY NOT NULL, 
+  "discussion_id" varchar(21) PRIMARY KEY NOT NULL, 
   "table_name" varchar NOT NULL, 
-  "row" integer, 
-  "app" integer NOT NULL DEFAULT (0),
-  "org" integer NOT NULL DEFAULT (0)
+  "row" varchar, 
+  "app" integer NOT NULL DEFAULT (0), 
+  "org" integer NOT NULL DEFAULT (0), 
+  "sync_layer" bigint NOT NULL DEFAULT (0)
+)
+
+CREATE TABLE "posts" (
+  "post_id" varchar(21) PRIMARY KEY NOT NULL,
+  "discussion_id" varchar NOT NULL,
+  "user_id" integer NOT NULL,
+  "quill_text" varchar NOT NULL,
+  "plain_text" varchar NOT NULL,
+  "isEdited" boolean NOT NULL DEFAULT false,
+  "replyId" bigint,
+  "created_at" timestamp,
+  "postgres_language" varchar NOT NULL,
+  "reply_id" integer,
+  "sync_layer" bigint NOT NULL DEFAULT (0),
+  CONSTRAINT "FK_user_id__users" FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT "FK_discussion_id__discussions" FOREIGN KEY ("discussion_id") REFERENCES "discussions" ("discussion_id") ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
 CREATE TABLE "posts" (
-  "post_id" bigserial PRIMARY KEY NOT NULL, 
-  "discussion_id" integer NOT NULL, 
-  "user_id" integer NOT NULL, 
-  "quill_text" varchar NOT NULL, 
-  "plain_text" varchar NOT NULL, 
-  "isEdited" boolean NOT NULL DEFAULT false, 
-  "replyId" bigint, 
-  "created_at" timestamp, 
-  "postgres_language" varchar NOT NULL, 
-  "reply_id" integer, 
-  CONSTRAINT "FK_user_id__users" 
-    FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE ON UPDATE NO ACTION, 
-  CONSTRAINT "FK_discussion_id__discussions" 
-    FOREIGN KEY ("discussion_id") REFERENCES "discussions" ("discussion_id") ON DELETE CASCADE ON UPDATE NO ACTION
-);
+  "post_id" varchar(21) PRIMARY KEY NOT NULL,
+  "discussion_id" varchar NOT NULL,
+  "user_id" integer NOT NULL,
+  "quill_text" varchar NOT NULL,
+  "plain_text" varchar NOT NULL,
+  "isEdited" boolean NOT NULL DEFAULT (0),
+  "replyId" bigint,
+  "created_at" datetime NOT NULL DEFAULT (datetime('now')),
+  "postgres_language" varchar NOT NULL,
+  "reply_id" varchar(21),
+  "sync_layer" bigint NOT NULL DEFAULT (0),
+  CONSTRAINT "FK_3979ba2957663111a9aad6fd9ef" FOREIGN KEY ("discussion_id") REFERENCES "discussions" ("discussion_id") ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT "FK_c4f9a7bd77b489e711277ee5986" FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE ON UPDATE NO ACTION
+)
 
 CREATE TABLE "reactions" (
   "reaction_id" bigserial PRIMARY KEY NOT NULL, 
