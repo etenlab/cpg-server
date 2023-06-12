@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { graphqlUploadExpress } from 'graphql-upload-ts';
 import * as dotenv from 'dotenv';
+import * as bodyParser from 'body-parser';
 
 import { AppModule } from './app.module';
 
@@ -28,6 +29,9 @@ async function bootstrap() {
       maxFileSize: process.env.MAX_FILE_SIZE || 1024 * 1024 * 50,
     }),
   );
+
+  app.use(bodyParser.json({ limit: '5mb' }));
+  app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
 
   const config = new DocumentBuilder()
     .setTitle('Database load API')
