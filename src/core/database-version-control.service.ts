@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { readFileSync } from 'fs';
 import { PostgresService } from './postgres.service';
-import { log } from 'console';
+import { ConfigService } from '@nestjs/config';
+import { DEFAULT_SCHEMA } from '../constants';
 
 @Injectable()
 export class DatabaseVersionControlService {
-  constructor(private pg: PostgresService) {
+  private schema: string;
+  constructor(
+    private pg: PostgresService,
+    protected configService: ConfigService,
+  ) {
+    this.schema = this.configService.get('DB_SCHEMA') || DEFAULT_SCHEMA;
     console.log('Database Version Control');
     this.init();
   }
@@ -27,21 +33,23 @@ export class DatabaseVersionControlService {
   async getIsDbInit(): Promise<boolean> {
     const res = await this.pg.pool.query(
       `
-      SELECT EXISTS (
-      SELECT FROM information_schema.tables 
-      WHERE  table_name   = 'database_version_control');
+      SELECT table_schema FROM information_schema.tables 
+      WHERE  table_name   = 'database_version_control';
     `,
       [],
     );
+    const existIndex = res.rows.findIndex(
+      (r) => r.table_schema === this.schema,
+    );
 
-    return res.rows.at(0)?.exists;
+    return existIndex >= 0;
   }
 
   async getSchemaVersion(): Promise<number> {
     const res = await this.pg.pool.query(
       `
       select version 
-      from admin.database_version_control 
+      from ${this.schema}.database_version_control 
       order by version 
       desc limit 1;
     `,
@@ -68,7 +76,7 @@ export class DatabaseVersionControlService {
   async setVersionNumber(version: number) {
     await this.pg.pool.query(
       `
-      insert into admin.database_version_control(version) values($1);
+      insert into ${this.schema}.database_version_control(version) values($1);
     `,
       [version],
     );
@@ -77,6 +85,7 @@ export class DatabaseVersionControlService {
   async runSqlFile(path: string) {
     console.log('loading SQL:', path);
     const data = readFileSync(path, 'utf8');
-    const res = await this.pg.pool.query(data, []);
+    const processedSqlScript = data.replace(/\$1/g, this.schema);
+    const res = await this.pg.pool.query(processedSqlScript, []);
   }
 }

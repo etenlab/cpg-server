@@ -3,7 +3,7 @@ import { Column, Entity, Index } from 'typeorm';
 // import { Users } from './Users';
 
 @Index('reset_tokens_pkey', ['token'], { unique: true })
-@Entity('reset_tokens', { schema: 'admin' })
+@Entity('reset_tokens')
 @ObjectType()
 export class ResetTokens {
   @Column('varchar', { primary: true, name: 'token', length: 250 })

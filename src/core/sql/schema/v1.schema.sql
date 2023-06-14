@@ -1,8 +1,8 @@
 -- schema.sql
 -- can only be run after the bootstrap.sql file is run manually to setup the db
 
-create schema admin;
-SET search_path TO admin;
+create schema IF NOT EXISTS $1;
+SET search_path TO $1;
 
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
