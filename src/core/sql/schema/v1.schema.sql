@@ -463,7 +463,7 @@ insert into relationship_types (type_name, updated_at) values
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
-create schema public;
+-- create schema public;
 SET search_path TO public;
 
 create type iso_639_2_entry_type as enum (
