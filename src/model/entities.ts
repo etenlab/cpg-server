@@ -25,13 +25,7 @@ import { RelationshipType } from '@eten-lab/models';
 import { Relationship } from '@eten-lab/models';
 import { Vote } from '@eten-lab/models';
 import { Election, ElectionType } from '@eten-lab/models';
-
-import { Avatars } from './entities/Avatars';
-import { AvatarsHistory } from './entities/AvatarsHistory';
-import { EmailTokens } from './entities/EmailTokens';
 import { ResetTokens } from './entities/ResetTokens';
-import { Tokens } from './entities/Tokens';
-import { WebsocketSessions } from './entities/WebsocketSessions';
 
 export const entities = [
   Discussion,
@@ -50,12 +44,7 @@ export const entities = [
   Candidate,
   Vote,
   User,
-  Avatars,
-  AvatarsHistory,
-  EmailTokens,
   ResetTokens,
-  Tokens,
-  WebsocketSessions,
   RelationshipPostFile,
   File,
 ];
@@ -77,12 +66,7 @@ export {
   Candidate,
   Vote,
   User,
-  Avatars,
-  AvatarsHistory,
-  EmailTokens,
   ResetTokens,
-  Tokens,
-  WebsocketSessions,
   RelationshipPostFile,
   File,
 };
