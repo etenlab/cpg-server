@@ -160,6 +160,90 @@ const tableConfigFactory = (
         },
       ],
     },
+    {
+      localTableName: TableNameConst.ELECTION_TYPES,
+      remoteTableName: TableNameConst.ELECTION_TYPES,
+      localPK: 'type_name',
+      schema,
+      columns: [
+        { local: 'updated_at' },
+        {
+          local: 'type_name',
+        },
+      ],
+    },
+    {
+      localTableName: TableNameConst.ELECTIONS,
+      remoteTableName: TableNameConst.ELECTIONS,
+      localPK: 'election_id',
+      schema,
+      columns: [
+        { local: 'updated_at' },
+        {
+          local: 'election_id',
+        },
+        {
+          local: 'election_type',
+        },
+        {
+          local: 'election_ref',
+        },
+        {
+          local: 'ref_table_name',
+        },
+        {
+          local: 'candidate_ref_table_name',
+        },
+        {
+          local: 'site_text',
+        },
+        {
+          local: 'site_text_translation',
+        },
+        {
+          local: 'app',
+        },
+      ],
+    },
+    {
+      localTableName: TableNameConst.CANDIDATES,
+      remoteTableName: TableNameConst.CANDIDATES,
+      localPK: 'candidate_id',
+      schema,
+      columns: [
+        { local: 'updated_at' },
+        {
+          local: 'candidate_id',
+        },
+        {
+          local: 'election_id',
+        },
+        {
+          local: 'candidate_ref',
+        },
+      ],
+    },
+    {
+      localTableName: TableNameConst.VOTES,
+      remoteTableName: TableNameConst.VOTES,
+      localPK: 'vote_id',
+      schema,
+      columns: [
+        { local: 'updated_at' },
+        {
+          local: 'vote_id',
+        },
+        {
+          local: 'candidate_id',
+        },
+        {
+          local: 'user_id',
+        },
+        {
+          local: 'vote',
+        },
+      ],
+    },
   ];
 };
 
@@ -202,66 +286,71 @@ export class SyncService {
         continue;
       }
 
-      await this.em.transaction(async (em) => {
-        const remoteTableName = entry.table;
+      try {
+        await this.em.transaction(async (em) => {
+          const remoteTableName = entry.table;
 
-        const config = Object.values(this.tableConfig).find(
-          (config) => config.remoteTableName === remoteTableName,
-        );
+          const config = Object.values(this.tableConfig).find(
+            (config) => config.remoteTableName === remoteTableName,
+          );
 
-        if (!config) {
-          throw new Error(`Cannot find config for table ${entry.table}`);
-        }
+          if (!config) {
+            throw new Error(`Cannot find config for table ${entry.table}`);
+          }
 
-        const { localTableName, localPK, columns, schema } = config;
-        const localRows = [] as any[];
+          const { localTableName, localPK, columns, schema } = config;
+          const localRows = [] as any[];
 
-        for (const row of entry.rows) {
-          const localRow = Object.entries(row).reduce((acc, [key, value]) => {
-            const column = columns.find(
-              (column) => (column.remote || column.local) === key,
-            );
-            if (column) {
-              if (column.convertToLocal) {
-                acc[column.local] = column.convertToLocal(value);
-              } else {
-                acc[column.local] = value;
-              }
-            } else {
-              console.error(
-                `Cannot find column for key ${key} in the config of table ${entry.table}`,
+          for (const row of entry.rows) {
+            const localRow = Object.entries(row).reduce((acc, [key, value]) => {
+              const column = columns.find(
+                (column) => (column.remote || column.local) === key,
               );
-            }
+              if (column) {
+                if (column.convertToLocal) {
+                  acc[column.local] = column.convertToLocal(value);
+                } else {
+                  acc[column.local] = value;
+                }
+              } else {
+                console.error(
+                  `Cannot find column for key ${key} in the config of table ${entry.table}`,
+                );
+              }
 
-            acc['updated_at'] = new Date();
+              acc['updated_at'] = new Date();
 
-            return acc;
-          }, {} as any);
+              return acc;
+            }, {} as any);
 
-          localRows.push(localRow);
-        }
+            localRows.push(localRow);
+          }
 
-        const columnsOrder = Object.keys(localRows[0]);
+          const columnsOrder = Object.keys(localRows[0]);
 
-        const tablePlaceholder = 'TABLENAME_PLACEHOLDER_123123123123123123123';
+          const tablePlaceholder =
+            'TABLENAME_PLACEHOLDER_123123123123123123123';
 
-        const sql = em
-          .createQueryBuilder()
-          .insert()
-          .into(tablePlaceholder, columnsOrder)
-          .values(localRows)
-          .orUpdate(columnsOrder, [localPK], {
-            upsertType: 'on-conflict-do-update',
-          });
+          const sql = em
+            .createQueryBuilder()
+            .insert()
+            .into(tablePlaceholder, columnsOrder)
+            .values(localRows)
+            .orUpdate(columnsOrder, [localPK], {
+              upsertType: 'on-conflict-do-update',
+            });
 
-        const [query, params] = sql.getQueryAndParameters();
-        const qr = query.replace(
-          tablePlaceholder,
-          `${schema}"."${localTableName}`,
-        );
+          const [query, params] = sql.getQueryAndParameters();
+          const qr = query.replace(
+            tablePlaceholder,
+            `${schema}"."${localTableName}`,
+          );
 
-        await em.query(qr, params);
-      });
+          await em.query(qr, params);
+        });
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 
@@ -273,40 +362,47 @@ export class SyncService {
 
       let rows: any[] = [];
 
-      if (lastSyncDate) {
-        rows = await this.em.query(
-          `SELECT * FROM ${schema}.${localTableName} WHERE updated_at > $1`,
-          [lastSyncDate],
-        );
-      } else {
-        rows = await this.em.query(`SELECT * FROM ${schema}.${localTableName}`);
-      }
+      try {
+        if (lastSyncDate) {
+          rows = await this.em.query(
+            `SELECT * FROM ${schema}.${localTableName} WHERE updated_at > $1`,
+            [lastSyncDate],
+          );
+        } else {
+          rows = await this.em.query(
+            `SELECT * FROM ${schema}.${localTableName}`,
+          );
+        }
 
-      const remoteRows = rows.map((row: any) => {
-        return Object.entries(row).reduce((acc, [key, value]) => {
-          const column = columns.find((column) => column.local === key);
-          if (!column) {
+        const remoteRows = rows.map((row: any) => {
+          return Object.entries(row).reduce((acc, [key, value]) => {
+            const column = columns.find((column) => column.local === key);
+            if (!column) {
+              return acc;
+            }
+
+            if (column.convertToRemote) {
+              acc[column.remote || column.local] =
+                column.convertToRemote(value);
+            } else {
+              acc[column.remote || column.local] = value;
+            }
+
             return acc;
-          }
+          }, {} as any);
+        });
 
-          if (column.convertToRemote) {
-            acc[column.remote || column.local] = column.convertToRemote(value);
-          } else {
-            acc[column.remote || column.local] = value;
-          }
+        if (!remoteRows.length) {
+          continue;
+        }
 
-          return acc;
-        }, {} as any);
-      });
-
-      if (!remoteRows.length) {
-        continue;
+        result.push({
+          table: remoteTableName,
+          rows: remoteRows,
+        });
+      } catch (err) {
+        console.log(err);
       }
-
-      result.push({
-        table: remoteTableName,
-        rows: remoteRows,
-      });
     }
 
     return result;

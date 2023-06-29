@@ -41,7 +41,8 @@ CREATE TABLE "node_types" (
 
 CREATE TABLE "election_types" (
   "sync_layer" bigint NOT NULL DEFAULT (0), 
-  "type_name" varchar PRIMARY KEY NOT NULL
+  "type_name" varchar PRIMARY KEY NOT NULL,
+  "updated_at" timestamp
 );
 
 CREATE TABLE "files" (
@@ -146,6 +147,7 @@ CREATE TABLE "elections" (
   "site_text" boolean, 
   "site_text_translation" boolean, 
   "app" varchar,
+  "updated_at" timestamp,
   CONSTRAINT "FK_election_type__election_types" 
     FOREIGN KEY ("election_type") REFERENCES "election_types" ("type_name") ON DELETE CASCADE ON UPDATE NO ACTION
 );
@@ -155,6 +157,7 @@ CREATE TABLE "candidates" (
   "candidate_id" varchar(21) PRIMARY KEY NOT NULL, 
   "election_id" varchar NOT NULL, 
   "candidate_ref" varchar NOT NULL, 
+  "updated_at" timestamp,
   CONSTRAINT "FK_election_id__elections" 
     FOREIGN KEY ("election_id") REFERENCES "elections" ("election_id") ON DELETE CASCADE ON UPDATE NO ACTION
 );
@@ -165,6 +168,7 @@ CREATE TABLE "votes" (
   "candidate_id" varchar NOT NULL, 
   "user_id" varchar NOT NULL, 
   "vote" boolean NOT NULL, 
+  "updated_at" timestamp,
   CONSTRAINT "FK_candidate_id__candidates" 
     FOREIGN KEY ("candidate_id") REFERENCES "candidates" ("candidate_id") ON DELETE CASCADE ON UPDATE NO ACTION
 );
