@@ -4,6 +4,10 @@ import { EntityManager } from 'typeorm';
 import { DEFAULT_SCHEMA, TableNameConst } from '../constants';
 import { ConfigService } from '@nestjs/config';
 
+import * as pako from 'pako';
+
+import { type DatabaseDTO } from './sync.controller';
+
 type SyncTableConfig = {
   localTableName: string;
   remoteTableName: string;
@@ -406,5 +410,39 @@ export class SyncService {
     }
 
     return result;
+  }
+
+  async syncToClientViaJson(): Promise<string> {
+    const entries = await this.syncToClient(null);
+
+    const resDB: DatabaseDTO = {
+      [TableNameConst.NODE_TYPES]: [],
+      [TableNameConst.NODES]: [],
+      [TableNameConst.NODE_PROPERTY_KEYS]: [],
+      [TableNameConst.NODE_PROPERTY_VALUES]: [],
+      [TableNameConst.RELATIONSHIP_TYPES]: [],
+      [TableNameConst.RELATIONSHIPS]: [],
+      [TableNameConst.RELATIONSHIP_PROPERTY_KEYS]: [],
+      [TableNameConst.RELATIONSHIP_PROPERTY_VALUES]: [],
+      [TableNameConst.ELECTION_TYPES]: [],
+      [TableNameConst.ELECTIONS]: [],
+      [TableNameConst.CANDIDATES]: [],
+      [TableNameConst.VOTES]: [],
+    };
+
+    entries.forEach(
+      (entry) => (resDB[entry.table as keyof typeof resDB] = entry.rows),
+    );
+
+    const currentDate = new Date();
+
+    const compressed = pako.deflate(
+      JSON.stringify({
+        lastSync: currentDate.toISOString(),
+        db: resDB,
+      }),
+    );
+
+    return Buffer.from(compressed).toString('binary');
   }
 }
