@@ -19,12 +19,13 @@ async function bootstrap() {
   app.enableCors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type, Accept, Authorization',
+    allowedHeaders: 'Content-Type, Accept, Authorization, content-disposition',
     exposedHeaders: 'Content-Type, Accept, Authorization',
     credentials: true,
   });
 
   app.use(
+    '/graphql',
     graphqlUploadExpress({
       maxFileSize: process.env.MAX_FILE_SIZE || 1024 * 1024 * 50,
     }),
