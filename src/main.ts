@@ -1,6 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { MicroserviceOptions } from '@nestjs/microservices';
+import { PgNotifyServer } from 'nestjs-pg-notify';
 import { graphqlUploadExpress } from 'graphql-upload-ts';
+
 import * as dotenv from 'dotenv';
 import * as bodyParser from 'body-parser';
 
@@ -15,6 +18,22 @@ console.log(corsAllowedOrigins);
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {});
+
+  app.connectMicroservice<MicroserviceOptions>({
+    strategy: new PgNotifyServer({
+      connection: {
+        host: process.env.DB_HOST,
+        port: +process.env.DB_PORT,
+        database: process.env.DB_NAME,
+        user: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+      },
+      strategy: {
+        retryInterval: 1_000,
+        retryTimeout: Infinity,
+      },
+    }),
+  });
 
   app.enableCors({
     origin: '*',
@@ -43,6 +62,7 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
 
+  await app.startAllMicroservices();
   await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
