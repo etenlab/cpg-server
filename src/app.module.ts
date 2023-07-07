@@ -25,9 +25,11 @@ import { SeedService } from './seed/seed.service';
 
 import { CoreModule } from './core/core.module';
 import { FileModule } from './file/file.module';
+import { PubSubModule } from './pubSub.module';
 
 import entities from './model/entities';
 import { UsersModule } from './users/users.module';
+
 import { DEFAULT_SCHEMA } from './constants';
 
 @Module({
@@ -50,6 +52,9 @@ import { DEFAULT_SCHEMA } from './constants';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      subscriptions: {
+        'graphql-ws': true,
+      },
     }),
     MulterModule.register({}),
     TypeOrmModule.forRootAsync({
@@ -70,6 +75,7 @@ import { DEFAULT_SCHEMA } from './constants';
     }),
     TypeOrmModule.forFeature(entities),
     CoreModule,
+    PubSubModule,
     FileModule,
     HttpModule,
     SesManagerModule,
