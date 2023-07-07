@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { nanoid } from 'nanoid';
 
-import { File } from '@eten-lab/models';
+import { File } from '../file/file.model';
 
 import { Post } from './post.model';
 

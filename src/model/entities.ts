@@ -20,7 +20,7 @@ import {
   Relationship,
   RelationshipPropertyKey,
   RelationshipPropertyValue,
-  File,
+  // File,
 } from '@eten-lab/models';
 
 import { Discussion } from '../discussions/discussion.model';
@@ -30,6 +30,8 @@ import { Reaction } from '../reactions/reaction.model';
 import { RelationshipPostFile } from '../posts/relationship-post-file.model';
 
 import { ResetTokens } from './entities/ResetTokens';
+
+import { File } from '../file/file.model';
 
 export const entities = [
   Discussion,
