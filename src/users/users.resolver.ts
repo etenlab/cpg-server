@@ -1,10 +1,15 @@
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
-import { UsersService } from './users.service';
-import { User, ResetTokens } from 'src/model/entities';
-import axios from 'axios';
 import * as querystring from 'qs';
+import axios from 'axios';
 import { NotFoundError } from 'rxjs';
+
+import { UsersService } from './users.service';
+
 import { decodeToken, isTokenValid } from 'src/utils/AuthUtils';
+
+import { User, ResetTokens } from 'src/model/entities';
+
+import { NewUserInput } from './new-user.input';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -211,5 +216,25 @@ export class UsersResolver {
       }
       return status;
     }
+  }
+
+  @Mutation(() => User)
+  async createUser(
+    @Args('newUserData') newUserData: NewUserInput,
+  ): Promise<User> {
+    const user = await this.usersService.create(newUserData);
+    return user;
+  }
+
+  @Query(() => User)
+  async getUserFromEmail(@Args('email') email: string): Promise<User> {
+    const user = await this.usersService.getUserFromEmail(email);
+    return user;
+  }
+
+  @Query(() => User)
+  async getUserFromName(@Args('name') name: string): Promise<User> {
+    const user = await this.usersService.getUserFromName(name);
+    return user;
   }
 }
