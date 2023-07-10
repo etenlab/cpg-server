@@ -135,6 +135,29 @@ export class UsersService {
     return await this.userRepository.save(user);
   }
 
+  async update(id: string, newUserData: NewUserInput): Promise<User> {
+    const exist = await this.userRepository.findOne({
+      where: {
+        user_id: id,
+      },
+    });
+
+    if (!exist) {
+      throw new NotFoundException(`Not exists a user having user_id=${id}`);
+    }
+
+    await this.userRepository.update(id, {
+      user_id: id,
+      ...newUserData,
+    });
+
+    return await this.userRepository.findOne({
+      where: {
+        user_id: id,
+      },
+    });
+  }
+
   async getUserFromEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOne({
       where: {
