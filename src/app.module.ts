@@ -26,9 +26,12 @@ import { SeedService } from './seed/seed.service';
 import { CoreModule } from './core/core.module';
 import { FileModule } from './file/file.module';
 import { PubSubModule } from './pubSub.module';
+import { DiscussionsModule } from './discussions/discussions.module';
+import { PostsModule } from './posts/posts.module';
+import { ReactionsModule } from './reactions/reactions.module';
+import { UsersModule } from './users/users.module';
 
 import entities from './model/entities';
-import { UsersModule } from './users/users.module';
 
 import { DEFAULT_SCHEMA } from './constants';
 
@@ -79,6 +82,9 @@ import { DEFAULT_SCHEMA } from './constants';
     FileModule,
     HttpModule,
     SesManagerModule,
+    DiscussionsModule,
+    PostsModule,
+    ReactionsModule,
     UsersModule,
   ],
   controllers: [AppController, SyncController, SeedController],
