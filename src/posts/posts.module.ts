@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PgNotifyClient } from 'nestjs-pg-notify';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { PostsResolver } from './posts.resolver';
 import { PostsController } from './posts.controller';
@@ -17,23 +16,25 @@ import { File } from '@eten-lab/models';
 
 import { Token } from '../token';
 
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([Post, Discussion, RelationshipPostFile, File]),
-    ConfigModule,
   ],
   controllers: [PostsController],
   providers: [
     {
       provide: Token.PgNotifyClient,
-      useFactory: (configService: ConfigService): ClientProxy =>
+      useFactory: (): ClientProxy =>
         new PgNotifyClient({
           connection: {
-            host: configService.get('DB_HOST'),
-            port: configService.get<number>('DB_PORT'),
-            database: configService.get('DB_NAME'),
-            user: configService.get('DB_USERNAME'),
-            password: configService.get('DB_PASSWORD'),
+            host: process.env.DB_HOST,
+            port: +process.env.DB_PORT,
+            database: process.env.DB_NAME,
+            user: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,
           },
           strategy: {
             retryInterval: 1_000,
