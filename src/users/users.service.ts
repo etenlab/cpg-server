@@ -1,16 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
+import { Repository } from 'typeorm';
+
+import { SesManagerService } from '../ses-manager/ses-manager.service';
+
 import { User } from '../model/entities';
 import { ResetTokens } from 'src/model/entities';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { SesManagerService } from '../ses-manager/ses-manager.service';
-import { JwtService } from '@nestjs/jwt';
+
+import { NewUserInput } from './new-user.input';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private userRepository: Repository<User>,
     @InjectRepository(ResetTokens)
     private tokensRepository: Repository<ResetTokens>,
     private ses: SesManagerService,
@@ -97,5 +101,65 @@ export class UsersService {
     return await this.tokensRepository.delete({
       token: token,
     });
+  }
+
+  async create(newUserData: NewUserInput): Promise<User> {
+    let exist = await this.userRepository.findOne({
+      where: {
+        kid: newUserData.kid,
+      },
+    });
+
+    exist = exist
+      ? exist
+      : await this.userRepository.findOne({
+          where: {
+            username: newUserData.username,
+          },
+        });
+
+    exist = exist
+      ? exist
+      : await this.userRepository.findOne({
+          where: {
+            email: newUserData.email,
+          },
+        });
+
+    if (exist) {
+      return exist;
+    }
+
+    const user = this.userRepository.create(newUserData);
+
+    return await this.userRepository.save(user);
+  }
+
+  async getUserFromEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User of #${email} not found`);
+    }
+
+    return user;
+  }
+
+  async getUserFromName(name: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: {
+        username: name,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Cannot find a user has name#${name}!`);
+    }
+
+    return user;
   }
 }

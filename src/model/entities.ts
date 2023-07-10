@@ -7,24 +7,27 @@
  * npx typeorm-model-generator -h postgres -d eil -u postgres -x example -e postgres -o ./src/model
  */
 
-import { Candidate, Discussion } from '@eten-lab/models';
-import { Post } from '@eten-lab/models';
-import { User } from '@eten-lab/models';
-import { Reaction } from '@eten-lab/models';
-import { RelationshipPostFile } from '@eten-lab/models';
-import { File } from '@eten-lab/models';
+import {
+  ElectionType,
+  Election,
+  Candidate,
+  Vote,
+  NodeType,
+  Node,
+  NodePropertyKey,
+  NodePropertyValue,
+  RelationshipType,
+  Relationship,
+  RelationshipPropertyKey,
+  RelationshipPropertyValue,
+  File,
+  Discussion,
+  Post,
+  Reaction,
+  RelationshipPostFile,
+  User,
+} from '@eten-lab/models';
 
-import { Node } from '@eten-lab/models';
-import { NodePropertyKey } from '@eten-lab/models';
-
-import { NodePropertyValue } from '@eten-lab/models';
-import { NodeType } from '@eten-lab/models';
-import { RelationshipPropertyKey } from '@eten-lab/models';
-import { RelationshipPropertyValue } from '@eten-lab/models';
-import { RelationshipType } from '@eten-lab/models';
-import { Relationship } from '@eten-lab/models';
-import { Vote } from '@eten-lab/models';
-import { Election, ElectionType } from '@eten-lab/models';
 import { ResetTokens } from './entities/ResetTokens';
 
 export const entities = [

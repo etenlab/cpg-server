@@ -7,6 +7,34 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Discussion {
+  discussion_id: String!
+  posts: [Post]!
+  row_id: String!
+  table_name: String!
+}
+
+input DiscussionInput {
+  row_id: String!
+  table_name: String!
+}
+
+type DiscussionSummary {
+  discussion_id: String!
+  row_id: String!
+  table_name: String!
+  total_posts: Int!
+}
+
+type File {
+  fileHash: String!
+  fileName: String!
+  fileSize: Int!
+  fileType: String!
+  fileUrl: String!
+  id: Int!
+}
+
 type FileDecoratorsGQL {
   fileHash: String!
   fileName: String!
@@ -17,16 +45,90 @@ type FileDecoratorsGQL {
 }
 
 type Mutation {
+  createDiscussion(newDiscussionData: DiscussionInput!): Discussion!
+  createPost(files: [Int]!, newPostData: NewPostInput!): Post!
+  createReaction(newReactionData: NewReactionInput!): Reaction!
+  createUser(newUserData: NewUserInput!): User!
+  deleteAttachment(attachmentId: String!, post_id: String!): Boolean!
+  deleteDiscussion(id: String!): Boolean!
+  deletePost(id: String!, userId: String!): Boolean!
+  deletePostsByDiscussionId(discussionId: String!): Boolean!
+  deleteReaction(id: String!, userId: String!): Boolean!
   forgotPassword(email: String!): ResetTokens!
   resetUserPassword(password: String!, token: String!): Boolean!
   updatePassword(password: String!, token: String!): Boolean!
+  updatePost(data: NewPostInput!, id: String!): Post!
+  updateReaction(data: NewReactionInput!, id: String!, userId: String!): Reaction!
   uploadFile(file: Upload!, file_size: Int!, file_type: String!): FileDecoratorsGQL!
 }
 
+input NewPostInput {
+  discussion_id: String!
+  plain_text: String!
+  postgres_language: String! = "simple"
+  quill_text: String!
+  reply_id: String
+  user_id: String!
+}
+
+input NewReactionInput {
+  content: String!
+  post_id: String!
+  user_id: String!
+}
+
+input NewUserInput {
+  avatar_url: String
+  email: String!
+  first_name: String!
+  kid: String!
+  last_name: String!
+  username: String!
+}
+
+type Post {
+  created_at: DateTime!
+  discussion_id: String!
+  files: [RelationshipPostFile]!
+  is_edited: Boolean!
+  plain_text: String!
+  post_id: String!
+  postgres_language: String!
+  quill_text: String!
+  reactions: [Reaction]!
+  reply: Post
+  reply_id: String
+  user: User!
+  user_id: String!
+}
+
 type Query {
+  discussion(id: String!): Discussion!
+  discussions(row_id: String!, table_name: String!): [Discussion!]!
   file(id: Int!): FileDecoratorsGQL!
   fileList: [FileDecoratorsGQL!]!
+  getDiscussionsSummaryByUserId(userId: String!): [DiscussionSummary!]!
+  getUserFromEmail(email: String!): User!
+  getUserFromName(name: String!): User!
   isTokenValid(token: String!): ResetTokens!
+  post(id: String!): Post!
+  postsByDiscussionId(discussionId: String!): [Post!]!
+  reaction(id: String!): Reaction!
+  reactionsByPostId(postId: String!): [Reaction!]!
+}
+
+type Reaction {
+  content: String!
+  post_id: String!
+  reaction_id: String!
+  user: User!
+  user_id: String!
+}
+
+type RelationshipPostFile {
+  file: File!
+  post_id: String!
+  relationship_post_file_id: String!
 }
 
 type ResetTokens {
@@ -35,5 +137,27 @@ type ResetTokens {
   user: String!
 }
 
+type Subscription {
+  discussionCreated(row_id: String!, table_name: String!): Discussion!
+  postCreated(discussionId: String!): Post!
+  postDeleted(discussionId: String!): String!
+  postUpdated(discussionId: String!): Post!
+  reactionCreated(discussionId: String!): Reaction!
+  reactionDeleted(discussionId: String!): String!
+}
+
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+type User {
+  active: Boolean!
+  avatar_url: String
+  created_at: DateTime!
+  email: String!
+  first_name: String!
+  is_email_verified: Boolean!
+  kid: String!
+  last_name: String!
+  user_id: String!
+  username: String!
+}

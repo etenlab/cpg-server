@@ -55,11 +55,18 @@ CREATE TABLE "files" (
 );
 
 CREATE TABLE "users" (
-  "user_id" bigserial PRIMARY KEY NOT NULL, 
+  "user_id"  varchar(21) PRIMARY KEY NOT NULL,
+  "kid" varchar NOT NULL,
   "username" varchar(255) NOT NULL, 
-  "first_name" varchar, 
-  "last_name" varchar, 
-CONSTRAINT "UQ_users_username" UNIQUE ("username")
+  "email" varchar(255) NOT NULL,
+  "first_name" varchar NOT NULL, 
+  "last_name" varchar NOT NULL,
+  "avatar_url" varchar,
+  "active" boolean NOT NULL DEFAULT (true),
+  "is_email_verified" boolean NOT NULL DEFAULT (false),
+  "created_at" timestamp,
+  CONSTRAINT "UQ_users_username" UNIQUE ("username"),
+  CONSTRAINT "UQ_users_email" UNIQUE ("email")
 );
 
 CREATE TABLE "sync_sessions" (
@@ -176,47 +183,150 @@ CREATE TABLE "votes" (
 CREATE TABLE "discussions" (
   "discussion_id" varchar(21) PRIMARY KEY NOT NULL, 
   "table_name" varchar NOT NULL, 
-  "row" varchar, 
-  "app" integer NOT NULL DEFAULT (0), 
-  "org" integer NOT NULL DEFAULT (0), 
-  "sync_layer" bigint NOT NULL DEFAULT (0)
+  "row_id" varchar
 );
+
+create or replace function fn_discussion_created() 
+	returns trigger as $discussion_created$
+	begin
+		perform pg_notify(
+    		'discussion_created',
+			json_build_object(
+			    'operation', TG_OP,
+			    'record', row_to_json(NEW)
+    		)::text);
+  		return NEW;
+	end;
+	$discussion_created$ language plpgsql;
+
+drop trigger if exists discussion_created
+  on discussions;
+ 
+create trigger discussion_created
+  after insert 
+  on discussions
+  for each row execute function fn_discussion_created();
 
 CREATE TABLE "posts" (
   "post_id" varchar(21) PRIMARY KEY NOT NULL,
-  "discussion_id" varchar NOT NULL,
-  "user_id" integer NOT NULL,
+  "discussion_id" varchar(21) NOT NULL,
+  "reply_id" varchar(21),
+  "user_id" varchar(21) NOT NULL,
   "quill_text" varchar NOT NULL,
   "plain_text" varchar NOT NULL,
-  "isEdited" boolean NOT NULL DEFAULT false,
-  "replyId" bigint,
+  "postgres_language" varchar NOT NULL DEFAULT ('simple'),
+  "is_edited" boolean NOT NULL DEFAULT (false),
   "created_at" timestamp,
-  "postgres_language" varchar NOT NULL,
-  "reply_id" integer,
-  "sync_layer" bigint NOT NULL DEFAULT (0),
   CONSTRAINT "FK_discussion_id__discussions" FOREIGN KEY ("discussion_id") REFERENCES "discussions" ("discussion_id") ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT "FK_user_id__users" FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
+create or replace function fn_post_changed() 
+	returns trigger as $post_changed$
+  declare
+    row RECORD;
+	begin
+    IF (TG_OP = 'DELETE') THEN
+      row = OLD;
+    ELSE 
+      row = NEW;
+    END IF;
+		
+    perform pg_notify(
+    		'post_changed',
+			json_build_object(
+			    'operation', TG_OP,
+			    'record', row_to_json(row)
+    		)::text);
+  		return row;
+	end;
+	$post_changed$ language plpgsql;
+
+drop trigger if exists post_changed
+  on posts;
+ 
+create trigger post_changed
+  after insert or update or delete
+  on posts
+  for each row execute function fn_post_changed();
+
 CREATE TABLE "reactions" (
-  "reaction_id" bigserial PRIMARY KEY NOT NULL, 
-  "post_id" varchar NOT NULL,
-  "user_id" integer NOT NULL,
+  "reaction_id" varchar(21) PRIMARY KEY NOT NULL, 
+  "post_id" varchar(21) NOT NULL,
+  "user_id" varchar(21) NOT NULL,
   "content" varchar NOT NULL,
   CONSTRAINT "FK_user_id__users" FOREIGN KEY ("user_id") REFERENCES "users" ("user_id") ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT "FK_post_id__posts" FOREIGN KEY ("post_id") REFERENCES "posts" ("post_id") ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
+create or replace function fn_reaction_changed() 
+	returns trigger as $reaction_changed$
+	declare
+    row RECORD;
+	begin
+    IF (TG_OP = 'DELETE') THEN
+      row = OLD;
+    ELSE 
+      row = NEW;
+    END IF;
+
+		perform pg_notify(
+    		'reaction_changed',
+			json_build_object(
+			    'operation', TG_OP,
+			    'record', row_to_json(row)
+    		)::text);
+  		return row;
+	end;
+	$reaction_changed$ language plpgsql;
+
+drop trigger if exists reaction_changed
+  on reactions;
+ 
+create trigger reaction_changed
+  after insert or update or delete
+  on reactions
+  for each row execute function fn_reaction_changed();
+
 CREATE TABLE "relationship_post_files" (
-  "relationship_post_file_id" bigserial PRIMARY KEY NOT NULL, 
-  "post_id" varchar NOT NULL,
+  "relationship_post_file_id" varchar(21) PRIMARY KEY NOT NULL, 
+  "post_id" varchar(21) NOT NULL,
   "file_id" integer NOT NULL, 
-  CONSTRAINT "REL_relationship_post_files_file_id" UNIQUE ("file_id"),
+  CONSTRAINT "REL_relationship_post_files_file_id" UNIQUE ("post_id", "file_id"),
   CONSTRAINT "FK_post_id__posts" 
     FOREIGN KEY ("post_id") REFERENCES "posts" ("post_id") ON DELETE CASCADE ON UPDATE NO ACTION, 
   CONSTRAINT "FK_file_id__files" 
     FOREIGN KEY ("file_id") REFERENCES "files" ("file_id") ON DELETE CASCADE ON UPDATE NO ACTION
 );
+
+create or replace function fn_relationship_post_file_deleted() 
+	returns trigger as $relationship_post_file_deleted$
+	declare
+    row RECORD;
+	begin
+    IF (TG_OP = 'DELETE') THEN
+      row = OLD;
+    ELSE 
+      row = NEW;
+    END IF;
+
+		perform pg_notify(
+    		'relationship_post_file_deleted',
+			json_build_object(
+			    'operation', TG_OP,
+			    'record', row_to_json(row)
+    		)::text);
+  		return row;
+	end;
+	$relationship_post_file_deleted$ language plpgsql;
+
+drop trigger if exists relationship_post_file_deleted
+  on relationship_post_files;
+ 
+create trigger relationship_post_file_deleted
+  after delete
+  on relationship_post_files
+  for each row execute function fn_relationship_post_file_deleted();
 
 create index idx_node_property_keys_node_id_key on node_property_keys (node_id);
 create index idx_node_property_values_key_id on node_property_values (node_property_key_id);
