@@ -226,6 +226,15 @@ export class UsersResolver {
     return user;
   }
 
+  @Mutation(() => User)
+  async updateUser(
+    @Args('id') user_id: string,
+    @Args('newUserData') newUserData: NewUserInput,
+  ): Promise<User> {
+    const user = await this.usersService.update(user_id, newUserData);
+    return user;
+  }
+
   @Query(() => User)
   async getUserFromEmail(@Args('email') email: string): Promise<User> {
     const user = await this.usersService.getUserFromEmail(email);
