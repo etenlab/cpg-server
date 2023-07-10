@@ -9,8 +9,7 @@ import { nanoid } from 'nanoid';
 
 import { NewPostInput } from './new-post.input';
 
-import { Post } from './post.model';
-import { RelationshipPostFile } from './relationship-post-file.model';
+import { Post, RelationshipPostFile } from '@eten-lab/models';
 
 import { PostDto } from './dto/post.dto';
 

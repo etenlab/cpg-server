@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
 
-import { Reaction } from './reaction.model';
+import { Reaction } from '@eten-lab/models';
 import { PostsService } from '../posts/posts.service';
 import { ReactionsService } from './reactions.service';
 import { NewReactionInput } from './new-reaction.input';

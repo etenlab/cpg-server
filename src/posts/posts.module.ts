@@ -9,10 +9,7 @@ import { PostsService } from './posts.service';
 
 import { DiscussionsService } from '../discussions/discussions.service';
 
-import { Post } from './post.model';
-import { Discussion } from '../discussions/discussion.model';
-import { RelationshipPostFile } from './relationship-post-file.model';
-import { File } from '@eten-lab/models';
+import { Post, Discussion, RelationshipPostFile, File } from '@eten-lab/models';
 
 import { Token } from '../token';
 

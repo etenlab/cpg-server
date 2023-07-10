@@ -7,8 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { NewReactionInput } from './new-reaction.input';
-import { Reaction } from './reaction.model';
-import { Post } from '../posts/post.model';
+import { Reaction, Post } from '@eten-lab/models';
 import { ReactionDto, DeletedReaction } from './dto/reaction.dto';
 
 @Injectable()

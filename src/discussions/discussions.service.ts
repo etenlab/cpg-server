@@ -2,8 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 
-import { Discussion } from './discussion.model';
-import { Post } from '../posts/post.model';
+import { Discussion, Post } from '@eten-lab/models';
 
 import { DiscussionInput } from './discussion.input';
 import { DiscussionSummary } from './dto/DiscussionSummary';

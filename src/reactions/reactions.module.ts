@@ -9,8 +9,7 @@ import { ReactionsService } from './reactions.service';
 
 import { ReactionsController } from './reactions.controller';
 
-import { Reaction } from './reaction.model';
-import { Post } from '../posts/post.model';
+import { Reaction, Post } from '@eten-lab/models';
 
 import { PostsModule } from '../posts/posts.module';
 

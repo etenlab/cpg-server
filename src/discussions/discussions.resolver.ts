@@ -5,7 +5,7 @@ import { PubSub } from 'graphql-subscriptions';
 import { PUB_SUB } from 'src/pubSub.module';
 import { Token } from '../token';
 
-import { Discussion } from './discussion.model';
+import { Discussion } from '@eten-lab/models';
 
 import { DiscussionsService } from './discussions.service';
 

@@ -7,9 +7,8 @@ import { DiscussionsResolver } from './discussions.resolver';
 import { DiscussionsService } from './discussions.service';
 import { DiscussionsController } from './discussions.controller';
 
-import { Discussion } from './discussion.model';
-import { Post } from '../posts/post.model';
-import { User } from '../users/user.model';
+import { Discussion, Post, User } from '@eten-lab/models';
+
 import { Token } from '../token';
 
 import * as dotenv from 'dotenv';

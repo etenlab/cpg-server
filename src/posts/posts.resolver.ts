@@ -17,7 +17,7 @@ import { PubSub } from 'graphql-subscriptions';
 import { PUB_SUB } from 'src/pubSub.module';
 import { Token } from '../token';
 
-import { Post } from './post.model';
+import { Post } from '@eten-lab/models';
 import { PostsService } from './posts.service';
 import { NewPostInput } from './new-post.input';
 
