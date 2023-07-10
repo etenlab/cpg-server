@@ -5,6 +5,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryColumn,
+  BeforeInsert,
   JoinColumn,
   CreateDateColumn,
 } from 'typeorm';
@@ -61,6 +62,11 @@ export class Post {
   @Field(() => Boolean, { defaultValue: false })
   @Column({ type: 'boolean', default: false })
   is_edited: boolean;
+
+  @BeforeInsert()
+  private setCreateDate(): void {
+    this.created_at = new Date();
+  }
 
   @CreateDateColumn()
   @Field(() => Date)

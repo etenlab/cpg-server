@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { PgNotifyClient } from 'nestjs-pg-notify';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { ReactionsResolver } from './reactions.resolver';
 
@@ -11,25 +10,29 @@ import { ReactionsService } from './reactions.service';
 import { ReactionsController } from './reactions.controller';
 
 import { Reaction } from './reaction.model';
+import { Post } from '../posts/post.model';
 
 import { PostsModule } from '../posts/posts.module';
 
 import { Token } from '../token';
 
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 @Module({
-  imports: [TypeOrmModule.forFeature([Reaction]), PostsModule, ConfigModule],
+  imports: [TypeOrmModule.forFeature([Reaction, Post]), PostsModule],
   controllers: [ReactionsController],
   providers: [
     {
       provide: Token.PgNotifyClient,
-      useFactory: (configService: ConfigService): ClientProxy =>
+      useFactory: (): ClientProxy =>
         new PgNotifyClient({
           connection: {
-            host: configService.get('DB_HOST'),
-            port: configService.get<number>('DB_PORT'),
-            database: configService.get('DB_NAME'),
-            user: configService.get('DB_USERNAME'),
-            password: configService.get('DB_PASSWORD'),
+            host: process.env.DB_HOST,
+            port: +process.env.DB_PORT,
+            database: process.env.DB_NAME,
+            user: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,
           },
           strategy: {
             retryInterval: 1_000,

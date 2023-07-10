@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { nanoid } from 'nanoid';
 
 import { NewPostInput } from './new-post.input';
 
@@ -30,11 +31,15 @@ export class PostsService {
       throw new NotFoundException(savedPost.post_id);
     }
 
-    await this.relationshipPostFileRepository.insert(
+    await this.relationshipPostFileRepository.upsert(
       files.map((file_id) => ({
+        relationship_post_file_id: nanoid(),
         file_id,
         post_id: savedPost.post_id,
       })),
+      {
+        conflictPaths: ['post_id', 'file_id'],
+      },
     );
 
     return savedPost;

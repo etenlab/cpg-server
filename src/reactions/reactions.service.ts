@@ -16,6 +16,7 @@ export class ReactionsService {
   constructor(
     @InjectRepository(Reaction)
     private reactionRepository: Repository<Reaction>,
+    @InjectRepository(Post)
     private postRepository: Repository<Post>,
   ) {}
 

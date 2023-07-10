@@ -64,8 +64,8 @@ CREATE TABLE "users" (
   "avatar_url" varchar,
   "active" boolean NOT NULL DEFAULT (true),
   "is_email_verified" boolean NOT NULL DEFAULT (false),
-  "created_at" timestamp NOT NULL,
-  CONSTRAINT "UQ_users_username" UNIQUE ("username")
+  "created_at" timestamp,
+  CONSTRAINT "UQ_users_username" UNIQUE ("username"),
   CONSTRAINT "UQ_users_email" UNIQUE ("email")
 );
 
@@ -292,13 +292,13 @@ CREATE TABLE "relationship_post_files" (
   "relationship_post_file_id" varchar(21) PRIMARY KEY NOT NULL, 
   "post_id" varchar(21) NOT NULL,
   "file_id" integer NOT NULL, 
-  CONSTRAINT "REL_relationship_post_files_file_id" UNIQUE ("file_id"),
+  CONSTRAINT "REL_relationship_post_files_file_id" UNIQUE ("post_id", "file_id"),
   CONSTRAINT "FK_post_id__posts" 
     FOREIGN KEY ("post_id") REFERENCES "posts" ("post_id") ON DELETE CASCADE ON UPDATE NO ACTION, 
   CONSTRAINT "FK_file_id__files" 
     FOREIGN KEY ("file_id") REFERENCES "files" ("file_id") ON DELETE CASCADE ON UPDATE NO ACTION
 );
- 
+
 create or replace function fn_relationship_post_file_deleted() 
 	returns trigger as $relationship_post_file_deleted$
 	declare
@@ -321,11 +321,11 @@ create or replace function fn_relationship_post_file_deleted()
 	$relationship_post_file_deleted$ language plpgsql;
 
 drop trigger if exists relationship_post_file_deleted
-  on relationship_post_file;
+  on relationship_post_files;
  
 create trigger relationship_post_file_deleted
   after delete
-  on relationship_post_file
+  on relationship_post_files
   for each row execute function fn_relationship_post_file_deleted();
 
 create index idx_node_property_keys_node_id_key on node_property_keys (node_id);

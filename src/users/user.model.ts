@@ -1,5 +1,11 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryColumn, CreateDateColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  BeforeInsert,
+  PrimaryColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 import { nanoid } from 'nanoid';
 
@@ -54,7 +60,12 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   avatar_url: string;
 
+  @BeforeInsert()
+  private setCreateDate(): void {
+    this.created_at = new Date();
+  }
+
   @Field(() => Date)
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 }

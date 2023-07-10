@@ -80,8 +80,6 @@ export class DiscussionsService {
         'posts.reactions.user',
         'posts.files',
         'posts.files.file',
-        'appList',
-        'organization',
       ],
       order: {
         posts: {
@@ -164,8 +162,6 @@ export class DiscussionsService {
         'posts.reactions.user',
         'posts.files',
         'posts.files.file',
-        'appList',
-        'organization',
       ],
       where: { discussion_id: record.discussion_id },
     });
