@@ -37,10 +37,10 @@ async function bootstrap() {
 
   app.enableCors({
     origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,',
-    allowedHeaders:
-      'Content-Type, Accept, Authorization, content-disposition, apollographql-client-name, apollographql-client-version',
-    exposedHeaders: 'Content-Type, Accept, Authorization',
+    // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,',
+    // allowedHeaders:
+    //   'Content-Type, Accept, Authorization, content-disposition, apollographql-client-name, apollographql-client-version',
+    // exposedHeaders: 'Content-Type, Accept, Authorization',
     credentials: true,
   });
 

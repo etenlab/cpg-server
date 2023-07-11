@@ -59,6 +59,7 @@ type Mutation {
   updatePassword(password: String!, token: String!): Boolean!
   updatePost(data: NewPostInput!, id: String!): Post!
   updateReaction(data: NewReactionInput!, id: String!, userId: String!): Reaction!
+  updateUser(id: String!, newUserData: NewUserInput!): User!
   uploadFile(file: Upload!, file_size: Int!, file_type: String!): FileDecoratorsGQL!
 }
 
