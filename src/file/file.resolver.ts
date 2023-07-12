@@ -52,6 +52,24 @@ export class FileResolver {
     return file;
   }
 
+  @Mutation(() => FileDecoratorsGQL)
+  async updateFile(
+    @Args({ name: 'file', type: () => GraphQLUpload })
+    { createReadStream, filename: file_name }: FileUpload,
+    @Args({ name: 'id', type: () => Int }) id: number,
+    @Args({ name: 'file_type', type: () => String }) file_type: string,
+    @Args({ name: 'file_size', type: () => Int }) file_size: number,
+  ): Promise<File> {
+    const file = await this.fileService.updateFile(
+      createReadStream(),
+      id,
+      file_name,
+      file_type,
+      file_size,
+    );
+    return file;
+  }
+
   @Query(() => [FileDecoratorsGQL], { name: 'fileList' })
   async getAll() {
     return await this.fileService.getAll();
