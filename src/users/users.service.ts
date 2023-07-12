@@ -104,27 +104,11 @@ export class UsersService {
   }
 
   async create(newUserData: NewUserInput): Promise<User> {
-    let exist = await this.userRepository.findOne({
-      where: {
-        kid: newUserData.kid,
-      },
+    const exist = this.getUser({
+      kid: newUserData.kid,
+      email: newUserData.email,
+      username: newUserData.username,
     });
-
-    exist = exist
-      ? exist
-      : await this.userRepository.findOne({
-          where: {
-            username: newUserData.username,
-          },
-        });
-
-    exist = exist
-      ? exist
-      : await this.userRepository.findOne({
-          where: {
-            email: newUserData.email,
-          },
-        });
 
     if (exist) {
       return exist;
@@ -158,31 +142,59 @@ export class UsersService {
     });
   }
 
-  async getUserFromEmail(email: string): Promise<User> {
-    const user = await this.userRepository.findOne({
-      where: {
-        email,
-      },
-    });
+  async getUser({
+    id,
+    kid,
+    email,
+    username,
+  }: {
+    id?: string;
+    kid?: string;
+    email?: string;
+    username?: string;
+  }): Promise<User | null> {
+    let exist: User | null = id
+      ? await this.userRepository.findOne({
+          where: {
+            user_id: id,
+          },
+        })
+      : null;
 
-    if (!user) {
-      throw new NotFoundException(`User of #${email} not found`);
+    exist = exist
+      ? exist
+      : kid
+      ? await this.userRepository.findOne({
+          where: {
+            kid: kid,
+          },
+        })
+      : null;
+
+    exist = exist
+      ? exist
+      : email
+      ? await this.userRepository.findOne({
+          where: {
+            email: email,
+          },
+        })
+      : null;
+
+    exist = exist
+      ? exist
+      : username
+      ? await this.userRepository.findOne({
+          where: {
+            username: username,
+          },
+        })
+      : null;
+
+    if (exist) {
+      return exist;
     }
 
-    return user;
-  }
-
-  async getUserFromName(name: string): Promise<User> {
-    const user = await this.userRepository.findOne({
-      where: {
-        username: name,
-      },
-    });
-
-    if (!user) {
-      throw new NotFoundException(`Cannot find a user has name#${name}!`);
-    }
-
-    return user;
+    return exist;
   }
 }

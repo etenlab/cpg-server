@@ -10,7 +10,7 @@ const { version, name } = JSON.parse(pkg.toString());
 export class AppController {
   @Get('')
   getInfo() {
-    return { version, name };
+    return { version, name, updated: 'updated' };
   }
 
   @Get('cors')
