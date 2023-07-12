@@ -104,7 +104,7 @@ export class UsersService {
   }
 
   async create(newUserData: NewUserInput): Promise<User> {
-    const exist = this.getUser({
+    const exist = await this.getUser({
       kid: newUserData.kid,
       email: newUserData.email,
       username: newUserData.username,
