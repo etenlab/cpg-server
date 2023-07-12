@@ -236,14 +236,13 @@ export class UsersResolver {
   }
 
   @Query(() => User)
-  async getUserFromEmail(@Args('email') email: string): Promise<User> {
-    const user = await this.usersService.getUserFromEmail(email);
-    return user;
-  }
-
-  @Query(() => User)
-  async getUserFromName(@Args('name') name: string): Promise<User> {
-    const user = await this.usersService.getUserFromName(name);
+  async getUser(
+    @Args('id', { type: () => String, nullable: true }) id: string,
+    @Args('email', { type: () => String, nullable: true }) email: string,
+    @Args('username', { type: () => String, nullable: true }) username: string,
+    @Args('kid', { type: () => String, nullable: true }) kid: string,
+  ): Promise<User> {
+    const user = await this.usersService.getUser({ id, email, username, kid });
     return user;
   }
 }

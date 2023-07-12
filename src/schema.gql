@@ -109,8 +109,7 @@ type Query {
   file(id: Int!): FileDecoratorsGQL!
   fileList: [FileDecoratorsGQL!]!
   getDiscussionsSummaryByUserId(userId: String!): [DiscussionSummary!]!
-  getUserFromEmail(email: String!): User!
-  getUserFromName(name: String!): User!
+  getUserFromEmail(email: String, id: String, kid: String, username: String): User!
   isTokenValid(token: String!): ResetTokens!
   post(id: String!): Post!
   postsByDiscussionId(discussionId: String!): [Post!]!
